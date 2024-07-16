@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\window">
+      <UniqueIdentifier>{92c866d8-e5f6-4ffc-aa81-6942a5205b69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\window">
+      <UniqueIdentifier>{9c95b865-1ae7-420e-91c5-837505992b49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\start/stop">
+      <UniqueIdentifier>{48d36bde-20d1-4e38-a77d-2fd1392f1589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\start/stop">
+      <UniqueIdentifier>{033a1489-4ced-4a03-9432-1652a7dae572}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\vulkan">
+      <UniqueIdentifier>{ae3730c8-0202-4b53-b3b4-34c602fc9f8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\vulkan">
+      <UniqueIdentifier>{7efb71d6-dce4-4ca3-9742-d08b04109781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\debug">
+      <UniqueIdentifier>{a33859da-677a-4ac3-9cf4-862f8477c021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\debug">
+      <UniqueIdentifier>{637c105a-b832-4f8a-9ca0-4f394c1574d4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sp_Enter.cpp">
+      <Filter>Source Files\start/stop</Filter>
+    </ClCompile>
+    <ClCompile Include="sp_Vulkan.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="sp_Window.cpp">
+      <Filter>Source Files\window</Filter>
+    </ClCompile>
+    <ClCompile Include="sp_Assert.cpp">
+      <Filter>Source Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="sp_Debug.cpp">
+      <Filter>Source Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="sp_Exit.cpp">
+      <Filter>Source Files\start/stop</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sparker Engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Enter.h">
+      <Filter>Header Files\start/stop</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_EnterInfo.h">
+      <Filter>Header Files\start/stop</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Vulkan.h">
+      <Filter>Header Files\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Window.h">
+      <Filter>Header Files\window</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Assert.h">
+      <Filter>Header Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Debug.h">
+      <Filter>Header Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Exit.h">
+      <Filter>Header Files\start/stop</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_ExitInfo.h">
+      <Filter>Header Files\start/stop</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Severity.h">
+      <Filter>Header Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_VkStructs.h">
+      <Filter>Header Files\vulkan</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
