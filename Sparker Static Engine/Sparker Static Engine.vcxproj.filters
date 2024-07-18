@@ -37,6 +37,15 @@
     <Filter Include="Source Files\debug">
       <UniqueIdentifier>{637c105a-b832-4f8a-9ca0-4f394c1574d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\vulkan\Shader">
+      <UniqueIdentifier>{53d3788a-de16-4c51-ad61-325abc95fcf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{4dbd1cf2-93b2-465b-b2eb-4c20f08bd674}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{11a28769-14c2-4b1a-8bbb-ef8c16a99a31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sp_Enter.cpp">
@@ -56,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="sp_Exit.cpp">
       <Filter>Source Files\start/stop</Filter>
+    </ClCompile>
+    <ClCompile Include="sp_Utility.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,5 +104,27 @@
     <ClInclude Include="sp_VkStructs.h">
       <Filter>Header Files\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="sp_Utility.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="first.vert">
+      <Filter>Header Files\vulkan\Shader</Filter>
+    </None>
+    <None Include="first.frag">
+      <Filter>Header Files\vulkan\Shader</Filter>
+    </None>
+    <None Include="compileShaders.bat">
+      <Filter>Header Files\vulkan\Shader</Filter>
+    </None>
+    <None Include="frag.spv">
+      <Filter>Header Files\vulkan\Shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="vert.spv">
+      <Filter>Header Files\vulkan\Shader</Filter>
+    </Media>
   </ItemGroup>
 </Project>

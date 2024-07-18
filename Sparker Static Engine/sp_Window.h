@@ -23,7 +23,6 @@ public:
 	GLFWwindow* getGLWindow();
 
 	void endFrame() {
-		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	

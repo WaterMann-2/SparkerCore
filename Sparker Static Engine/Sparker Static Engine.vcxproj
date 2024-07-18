@@ -23,6 +23,7 @@
     <ClCompile Include="sp_Debug.cpp" />
     <ClCompile Include="sp_Enter.cpp" />
     <ClCompile Include="sp_Exit.cpp" />
+    <ClCompile Include="sp_Utility.cpp" />
     <ClCompile Include="sp_Vulkan.cpp" />
     <ClCompile Include="sp_Window.cpp" />
   </ItemGroup>
@@ -35,9 +36,23 @@
     <ClInclude Include="sp_EnterInfo.h" />
     <ClInclude Include="sp_Exit.h" />
     <ClInclude Include="sp_Severity.h" />
+    <ClInclude Include="sp_Utility.h" />
     <ClInclude Include="sp_VkStructs.h" />
     <ClInclude Include="sp_Vulkan.h" />
     <ClInclude Include="sp_Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="compileShaders.bat" />
+    <None Include="first.frag" />
+    <None Include="first.vert" />
+    <None Include="frag.spv" />
+    <Media Include="vert.spv">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </Media>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

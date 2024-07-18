@@ -5,7 +5,7 @@ void sp_Console::consoleWrite(uint8_t severity, string message){
 	case SP_INFO:
 		cout << "[INFO] " << message << endl;
 		break;
-		
+
 	case SP_WARNING:
 		cout << "[WARNING] " << message << endl;
 		break;

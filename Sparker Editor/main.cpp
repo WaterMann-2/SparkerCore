@@ -13,7 +13,7 @@ int main() {
 
 	while (!glfwWindowShouldClose(window)) {
 		
-
+		vulkan.drawFrame();
 		window.endFrame();
 	}
 

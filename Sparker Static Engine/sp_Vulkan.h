@@ -21,6 +21,7 @@
 #include <glm/glm.hpp>
 
 #include "sp_Window.h"
+#include "sp_Utility.h"
 
 #include <vulkan/vulkan.h>
 
@@ -29,6 +30,7 @@ using std::uint32_t;
 using std::string;
 using std::vector;
 using std::to_string;
+using sp_Utility::ReadFile;
 
 #ifdef _DEBUG
 const bool enableValidationLayers = true;
@@ -42,6 +44,8 @@ const vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
 const vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
+const int MAX_FRAMES_IN_FLIGHT = 2;
+
 class sp_Vulkan{
 
 public:
@@ -49,7 +53,7 @@ public:
 	void vulkanStart(sp_Window iWindow);
 	void vulkanCleanup();
 
-	bool checkValidationLayerSupport();
+	void drawFrame();
 
 private:
 	sp_Window window;
@@ -74,8 +78,21 @@ private:
 
 	vector<VkImageView> swapchainImageViews;
 
+	VkRenderPass renderPass;
+	VkPipelineLayout pipelineLayout;
+
+	VkPipeline graphicsPipeline;
+	vector<VkFramebuffer> swapchainFramebuffers;
+
+	VkCommandPool commandPool;
+	vector<VkCommandBuffer> commandBuffers;
+
+	vector<VkSemaphore> imageAvailableSemaphores, renderFinishedSemaphores;
+	vector<VkFence> inFlightFences;
+
 	//Startup
 
+	bool checkValidationLayerSupport();
 	void createInstance();
 	static vector<const char*> getRequiredExtensions(bool debug);
 
@@ -116,5 +133,23 @@ private:
 
 	void createImageViews();
 	inline void destroyImageViews();
+
+	//Graphics pipeline
+
+	void createGraphicsPipeline();
+	VkShaderModule createShaderModule(const vector<char>& code);
+	
+
+	void createRenderPass();
+	void createFramebuffers();
+	void destroyFramebuffers();
+
+	void createCommandPool();
+	void createCommandBuffer();
+	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
+	void createSyncObjects();
+	void destroySyncObjects();
+
 };
 
