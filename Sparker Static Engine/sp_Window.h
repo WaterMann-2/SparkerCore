@@ -7,10 +7,18 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "sp_Debug.h"
+
 class sp_Window{
 	
 public:
-	glm::vec2 dimension = glm::vec2(800, 800);
+	bool getFramebufferResized() {
+		if (framebufferResized) {
+			framebufferResized = false;
+			return true;
+		}
+		return false;
+	}
 
 	void destroy();
 	
@@ -18,7 +26,7 @@ public:
 		return window;
 	}
 
-	static sp_Window newWindow(std::string windowName);
+	bool newWindow(std::string windowName);
 
 	GLFWwindow* getGLWindow();
 
@@ -31,7 +39,12 @@ public:
 
 private:
 	GLFWwindow* window;
+	glm::vec2 dimension = glm::vec2(800, 800);
 
-	std::string WindowName = "Vulkan Moment";
+	string WindowName = "Vulkan Moment";
+
+	bool framebufferResized = false;
+
+	static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 };
 

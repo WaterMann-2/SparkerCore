@@ -24,3 +24,10 @@ struct SwapChainSupportDetails {
 	vector<VkSurfaceFormatKHR> formats;
 	vector <VkPresentModeKHR> presentModes;
 };
+
+enum counting {
+	zero,
+	one, 
+	two, 
+	three
+};

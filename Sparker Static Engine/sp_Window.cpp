@@ -5,15 +5,19 @@ void sp_Window::destroy(){
 	glfwDestroyWindow(window);
 }
 
-sp_Window sp_Window::newWindow(std::string windowName){
-	sp_Window window;
+bool sp_Window::newWindow(std::string windowName){
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-	window.WindowName = windowName;
-	window.window = glfwCreateWindow(window.dimension.x, window.dimension.y, windowName.c_str(), NULL, NULL);
+	WindowName = windowName;
+	window = glfwCreateWindow(dimension.x, dimension.y, windowName.c_str(), NULL, NULL);
+	glfwMakeContextCurrent(window);
+	glfwSetWindowUserPointer(window, this);
+	glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+
+
 	return window;
 }
 
@@ -23,4 +27,9 @@ GLFWwindow* sp_Window::getGLWindow() {
 
 void sp_Window::end() {
 	glfwTerminate();
+}
+
+void sp_Window::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+	sp_Window* Window = reinterpret_cast<sp_Window*>(glfwGetWindowUserPointer(window));
+	Window->framebufferResized = true;
 }

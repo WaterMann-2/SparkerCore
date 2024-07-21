@@ -90,6 +90,8 @@ private:
 	vector<VkSemaphore> imageAvailableSemaphores, renderFinishedSemaphores;
 	vector<VkFence> inFlightFences;
 
+	uint32_t currentFrame = 0;
+
 	//Startup
 
 	bool checkValidationLayerSupport();
@@ -122,7 +124,9 @@ private:
 
 	//swapchain
 
-	void createSwapChain();
+	void createSwapchain();
+	void recreateSwapchain();
+	void cleanupSwapchain();
 
 	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR>& availableFormats);
@@ -142,14 +146,14 @@ private:
 
 	void createRenderPass();
 	void createFramebuffers();
-	void destroyFramebuffers();
+	inline void destroyFramebuffers();
 
 	void createCommandPool();
 	void createCommandBuffer();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	void createSyncObjects();
-	void destroySyncObjects();
+	inline void destroySyncObjects();
 
 };
 
