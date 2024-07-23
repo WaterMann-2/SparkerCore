@@ -22,6 +22,7 @@
 
 #include "sp_Window.h"
 #include "sp_Utility.h"
+#include "sp_Primitive.h"
 
 #include <vulkan/vulkan.h>
 
@@ -31,6 +32,7 @@ using std::string;
 using std::vector;
 using std::to_string;
 using sp_Utility::ReadFile;
+
 
 #ifdef _DEBUG
 const bool enableValidationLayers = true;
@@ -43,6 +45,12 @@ const bool enableValidationLayers = false;
 const vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
 const vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
+const vector<Vertex> vertices = {
+	{{0.0f, -0.5f}, {0.0f, 1.0f, 1.0f}},
+	{{0.5f, 0.5f}, {1.0f, 1.0f, 0.0f}},
+	{{-0.5f, 0.5f}, {0.0f, 0.0f, 0.0f}}
+};
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -91,6 +99,10 @@ private:
 	vector<VkFence> inFlightFences;
 
 	uint32_t currentFrame = 0;
+
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
+
 
 	//Startup
 
@@ -154,6 +166,10 @@ private:
 
 	void createSyncObjects();
 	inline void destroySyncObjects();
+
+	//Drawing
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	void createVertexBuffer();
 
 };
 

@@ -46,6 +46,12 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{11a28769-14c2-4b1a-8bbb-ef8c16a99a31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{8ced843e-f56c-4d0a-8f02-b3ac7470f206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{13a068a5-0e6e-452d-9f8a-d778ca23e992}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sp_Enter.cpp">
@@ -68,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="sp_Utility.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="sp_Primitive.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="sp_Utility.h">
       <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Primitive.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
