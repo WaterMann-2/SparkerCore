@@ -22,6 +22,19 @@ void sp_Console::consoleWrite(uint8_t severity, string message){
 	}
 }
 
+void sp_Console::vkResultCheck(uint8_t failSeverity, VkResult result, string successMessage, string failMessage, bool exitProgram){
+	if (result != VK_SUCCESS) {
+		consoleWrite(failSeverity, failMessage);
+		consoleWrite(failSeverity, "Error Code: " + result);
+		assert(exitProgram);
+	}
+	else {
+		consoleWrite(SP_INFO, successMessage);
+	}
+
+
+}
+
 VKAPI_ATTR VkBool32 VKAPI_CALL sp_Debug::VkDebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData){
 
 	std::cerr << "Validation layer: " << pCallbackData->pMessage << endl;

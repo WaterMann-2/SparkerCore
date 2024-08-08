@@ -1,5 +1,7 @@
 #pragma once
 
+#include "sp_Vulkan_Init.h"
+
 #include <iostream>
 #include <vector>
 #include <cstdint>

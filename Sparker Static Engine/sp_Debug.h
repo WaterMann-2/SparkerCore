@@ -3,9 +3,13 @@
 
 #ifdef _DEBUG
 	#define DCout(severity, message)  sp_Console::consoleWrite(severity, message)
+	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram) sp_Console::vkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram)
 #else
 	#define DCout(severity, message) do {} while(false)
+	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram)
 #endif
+
+
 
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -45,6 +49,7 @@ class sp_Console {
 public:
 
 	static void consoleWrite(uint8_t severity, string message);
+	static void vkResultCheck(uint8_t failSeverity, VkResult result, string SuccessMessage, string FailMessage, bool exitProgram);
 };
 
 struct sp_ErrorLocation {

@@ -26,6 +26,7 @@
     <ClCompile Include="sp_Primitive.cpp" />
     <ClCompile Include="sp_Utility.cpp" />
     <ClCompile Include="sp_Vulkan.cpp" />
+    <ClCompile Include="sp_Vulkan_Init.cpp" />
     <ClCompile Include="sp_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +42,7 @@
     <ClInclude Include="sp_Utility.h" />
     <ClInclude Include="sp_VkStructs.h" />
     <ClInclude Include="sp_Vulkan.h" />
+    <ClInclude Include="sp_Vulkan_Init.h" />
     <ClInclude Include="sp_Window.h" />
   </ItemGroup>
   <ItemGroup>

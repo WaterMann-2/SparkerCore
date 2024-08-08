@@ -78,6 +78,9 @@
     <ClCompile Include="sp_Primitive.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="sp_Vulkan_Init.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sparker Engine.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="sp_Primitive.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Vulkan_Init.h">
+      <Filter>Header Files\vulkan</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
