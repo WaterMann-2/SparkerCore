@@ -32,7 +32,7 @@ using std::string;
 using std::vector;
 using std::to_string;
 
-bool EnableValidationLayers = true;
+const bool EnableValidationLayers = true;
 
 const vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
@@ -50,7 +50,10 @@ namespace _sp_Vulkan {
 
 	public:
 
-		static VkInstance createInstance(VkInstance& instance);
+		static void createInstance(VkInstance& instance);
+		static void setupDebugMessenger(VkInstance& instance, VkDebugUtilsMessengerEXT& debugMessenger);
+		static void createSurface(VkInstance& instance, GLFWwindow*& window, VkSurfaceKHR& surface);
+		static void pickPhysicalDevice(VkInstance& instance);
 
 	private:
 
@@ -59,6 +62,12 @@ namespace _sp_Vulkan {
 		static vector<const char*> getExtensions();
 
 		static VkDebugUtilsMessengerCreateInfoEXT populateDebugMessenger();
+		static VkResult createDebugUtilsMessenger(VkInstance instance,
+			const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
+
+		static int32_t ratePhysicalDevices(VkPhysicalDevice device, VkSurfaceKHR surface);
+		static SwapchainSupportDetails getDeviceSwapchainDetails(VkPhysicalDevice device, VkSurfaceKHR surface);
+
 	};
 
 

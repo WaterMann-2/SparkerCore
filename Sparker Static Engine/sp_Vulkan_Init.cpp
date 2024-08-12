@@ -1,7 +1,7 @@
 #include "sp_Vulkan_Init.h"
 
-VkInstance _sp_Vulkan::startup::createInstance(VkInstance& instance) {
-	if (EnableValidationLayers && checkValidationLayerSupport()) {
+void _sp_Vulkan::startup::createInstance(VkInstance& instance) {
+	if (EnableValidationLayers && !checkValidationLayerSupport()) {
 		DCout(SP_ERROR, "Validation layers requested but not available!");
 	}
 
@@ -35,8 +35,7 @@ VkInstance _sp_Vulkan::startup::createInstance(VkInstance& instance) {
 	}
 
 	VkResult instanceResult = vkCreateInstance(&instanceInfo, nullptr, &instance);
-	VkResultCheck(SP_FATAL, instanceResult, "Vulkan instance successfully created created", "Failed to create Vulkan instance", true);
-
+	VkResultCheck(SP_FATAL, instanceResult, "Vulkan instance successfully created created", "Failed to create Vulkan instance", true, 100);
 }
 
 bool _sp_Vulkan::startup::checkValidationLayerSupport() {
@@ -50,6 +49,7 @@ bool _sp_Vulkan::startup::checkValidationLayerSupport() {
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
 	for (const char* layerName : validationLayers) {
+		string layerRequested;
 		bool layerFound = false;
 
 		for (const VkLayerProperties& layerProperties : availableLayers) {
@@ -57,9 +57,13 @@ bool _sp_Vulkan::startup::checkValidationLayerSupport() {
 				layerFound = true;
 				break;
 			}
+			layerRequested = layerProperties.layerName;
 		}
 
-		if (!layerFound) return false;
+		if (!layerFound) {
+			DCout(SP_ERROR, layerRequested + " requested but not found!");
+			return false;
+		}
 	}
 
 	return true;
@@ -93,3 +97,107 @@ VkDebugUtilsMessengerCreateInfoEXT _sp_Vulkan::startup::populateDebugMessenger()
 		
 	return debugCreateInfo;
 }
+
+
+
+void _sp_Vulkan::startup::setupDebugMessenger(VkInstance& instance, VkDebugUtilsMessengerEXT& debugMessenger) {
+	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = populateDebugMessenger();
+	VkResult debugCreateResult = createDebugUtilsMessenger(instance, &debugCreateInfo, nullptr, &debugMessenger);
+
+	VkResultCheck(SP_ERROR, debugCreateResult, "Created debug messenger", "Failed to create debug messenger!", false);
+}
+
+VkResult _sp_Vulkan::startup::createDebugUtilsMessenger(VkInstance instance,
+	const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+
+	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+
+	if (func != nullptr) {
+		return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+	}
+	else {
+		return VK_ERROR_EXTENSION_NOT_PRESENT;
+	}
+}
+
+void _sp_Vulkan::startup::createSurface(VkInstance& instance, GLFWwindow*& window, VkSurfaceKHR& surface){
+	int vulkanSupported = glfwVulkanSupported();
+	if (vulkanSupported == GLFW_FALSE) {
+		DCout(SP_FATAL, "Vulkan not supported!");
+		std::exit(100);
+	}
+
+	VkResult surfaceCreateResult = glfwCreateWindowSurface(instance, window, nullptr, &surface);
+
+	VkResultCheck(SP_FATAL, surfaceCreateResult, "Surface successfully created", "Failed to create surface!", true, 100);
+}
+
+void _sp_Vulkan::startup::pickPhysicalDevice(VkInstance& instance){
+	VkPhysicalDevice physicalDevice = NULL;
+	uint32_t deviceCount = 0;
+	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+
+	FatalExit(deviceCount == 0, "Failed to find GPU with Vulkan support!", 103);
+
+
+	vector<VkPhysicalDevice> devices(deviceCount);
+	vector<int32_t> deviceScores(deviceCount);
+	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+
+	int32_t bestScore = 0;
+	VkPhysicalDevice bestDevice = NULL;
+
+	for (int i = 0; i < deviceCount; i++) {
+		deviceScores[i] = ratePhysicalDevices(devices[i]);
+
+		if (deviceScores[i] > bestScore) {
+			bestScore = deviceScores[i];
+			bestDevice = devices[i];
+		}
+	}
+
+	FatalExit(bestDevice == VK_NULL_HANDLE, "Failed to find a suitable GPU!", 104);
+
+}
+
+int32_t _sp_Vulkan::startup::ratePhysicalDevices(VkPhysicalDevice device, VkSurfaceKHR surface) {
+	
+	VkPhysicalDeviceProperties deviceProperties;
+	vkGetPhysicalDeviceProperties(device, &deviceProperties);
+
+	VkPhysicalDeviceFeatures deviceFeatures;
+	vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+
+	uint32_t extensionCount;
+	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+	vector<VkExtensionProperties> availableExtensions(extensionCount);
+	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+
+	set<string> requiredExtensions(requiredDeviceExtensions.begin(), requiredDeviceExtensions.end());
+
+	for (const VkExtensionProperties& extension : availableExtensions) {
+		requiredExtensions.erase(extension.extensionName);
+	}
+
+	bool requiredExtensionsSupported = requiredExtensions.empty();
+
+	bool swapchainAdequate = false;
+	if (requiredExtensionsSupported) {
+		SwapchainSupportDetails swapchainSupport = getDeviceSwapchainDetails(device, surface);
+		swapchainAdequate = !swapchainSupport.formats.empty() && !swapchainSupport.presentModes.empty();
+	}
+
+	//If swapchain is not adequate OR unavailable
+	if (swapchainAdequate) return INT32_MIN;
+
+}
+
+SwapchainSupportDetails _sp_Vulkan::startup::getDeviceSwapchainDetails(VkPhysicalDevice device, VkSurfaceKHR surface){
+	SwapchainSupportDetails details;
+
+	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
+
+	
+}
+

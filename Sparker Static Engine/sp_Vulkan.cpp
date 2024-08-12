@@ -5,9 +5,9 @@ void sp_Vulkan::vulkanStart(sp_Window iWindow) {
 	window = iWindow;
 	glWindow = window.getGLWindow();
 
-	createInstance();
-	setupDebugMessenger();
-	createSurface();
+	_sp_Vulkan::startup::createInstance(instance);
+	_sp_Vulkan::startup::setupDebugMessenger(instance, debugMessenger);
+	_sp_Vulkan::startup::createSurface(instance, glWindow, surface);
 	pickPhysicalDevice();
 	createLogicalDevice();
 	createSwapchain();
@@ -297,7 +297,7 @@ bool sp_Vulkan::isSuitableDevice(VkPhysicalDevice device) {
 
 	bool swapChainAdequate = false;
 	if (extensionsSupported) {
-		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+		SwapchainSupportDetails swapChainSupport = querySwapChainSupport(device);
 		swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 	}
 
@@ -416,7 +416,7 @@ void sp_Vulkan::createLogicalDevice() {
 #pragma region Swapchain
 
 void sp_Vulkan::createSwapchain() {
-	SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
+	SwapchainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
 
 	VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
 	VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
@@ -500,8 +500,8 @@ void sp_Vulkan::cleanupSwapchain() {
 	vkDestroySwapchainKHR(device, swapchain, nullptr);
 }
 
-SwapChainSupportDetails sp_Vulkan::querySwapChainSupport(VkPhysicalDevice device) {
-	SwapChainSupportDetails details;
+SwapchainSupportDetails sp_Vulkan::querySwapChainSupport(VkPhysicalDevice device) {
+	SwapchainSupportDetails details;
 
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
 

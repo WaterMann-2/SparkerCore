@@ -3,10 +3,14 @@
 
 #ifdef _DEBUG
 	#define DCout(severity, message)  sp_Console::consoleWrite(severity, message)
-	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram) sp_Console::vkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram)
+	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram, exitCode) sp_Console::vkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram, exitCode)
+	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram) sp_Console::vkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram, 0);
+	#define FatalExit(failOnTrue, failMessage, failCode) sp_Console::fatalExit(failOnTrue, failMessage, failCode);
 #else
 	#define DCout(severity, message) do {} while(false)
+	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram, exitCode)
 	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram)
+	#define FatalExit(condition, failMessage, failCode)
 #endif
 
 
@@ -49,7 +53,8 @@ class sp_Console {
 public:
 
 	static void consoleWrite(uint8_t severity, string message);
-	static void vkResultCheck(uint8_t failSeverity, VkResult result, string SuccessMessage, string FailMessage, bool exitProgram);
+	static void vkResultCheck(uint8_t failSeverity, VkResult result, string SuccessMessage, string FailMessage, bool exitProgram, int32_t exitCode);
+	static void fatalExit(bool condition, string failMessage, int32_t exitCode);
 };
 
 struct sp_ErrorLocation {

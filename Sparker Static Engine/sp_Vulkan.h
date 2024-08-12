@@ -42,9 +42,10 @@ const bool enableValidationLayers = true;
 const bool enableValidationLayers = false;
 #endif // !_DEBUG
 
+
 #define debugCallback sp_Debug::VkDebugCallback
 
-const vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+//const vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
 const vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
@@ -142,7 +143,7 @@ private:
 	void recreateSwapchain();
 	void cleanupSwapchain();
 
-	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+	SwapchainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR chooseSwapPresentMode(const vector<VkPresentModeKHR>& availablePresentModes);
 	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilitites);
