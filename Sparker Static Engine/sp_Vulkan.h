@@ -50,9 +50,9 @@ const bool enableValidationLayers = false;
 const vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 const vector<Vertex> vertices = {
-	{{0.0f, -0.5f}, {0.0f, 1.0f, 1.0f}},
-	{{0.5f, 0.5f}, {1.0f, 1.0f, 0.0f}},
-	{{-0.5f, 0.5f}, {0.0f, 0.0f, 0.0f}}
+	{{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
+	{{0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+	{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
 };
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -173,6 +173,9 @@ private:
 	//Drawing
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	void createVertexBuffer();
+
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 };
 

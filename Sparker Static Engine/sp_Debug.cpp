@@ -22,20 +22,28 @@ void sp_Console::consoleWrite(uint8_t severity, string message){
 	}
 }
 
-void sp_Console::vkResultCheck(uint8_t failSeverity, VkResult result, string successMessage, string failMessage, bool exitProgram, int32_t exitCode){
+void sp_Console::vkResultCheck(uint8_t failSeverity, VkResult result, const char* successMessage, const char* failMessage, int exitCode){
 	if (result != VK_SUCCESS) {
 		consoleWrite(failSeverity, failMessage);
 		consoleWrite(failSeverity, "Error Code: " + result);
-		assert(exitProgram);
+		std::exit(exitCode);
 	}
 	else {
 		consoleWrite(SP_INFO, successMessage);
 	}
-
-
 }
 
-void sp_Console::fatalExit(bool failCondition, string failMessage, int32_t exitCode){
+void sp_Console::vkResultCheck(uint8_t failSeverity, VkResult result, const char* successMessage, const char* failMessage) {
+	if (result != VK_SUCCESS) {
+		consoleWrite(failSeverity, failMessage);
+		consoleWrite(failSeverity, "Error Code: " + result);
+	}
+	else {
+		consoleWrite(SP_INFO, successMessage);
+	}
+}
+
+void sp_Console::fatalExit(bool failCondition, string failMessage, int exitCode){
 	if (failCondition) {
 		DCout(SP_FATAL, failMessage);
 		std::exit(exitCode);

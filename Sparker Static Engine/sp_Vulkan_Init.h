@@ -45,7 +45,7 @@ const vector<const char*> requiredDeviceExtensions = {
 const int MAX_FRAME_BUFFER_SIZE = 2;
 
 namespace _sp_Vulkan {
-
+	/*
 	class startup {
 
 	public:
@@ -53,7 +53,7 @@ namespace _sp_Vulkan {
 		static void createInstance(VkInstance& instance);
 		static void setupDebugMessenger(VkInstance& instance, VkDebugUtilsMessengerEXT& debugMessenger);
 		static void createSurface(VkInstance& instance, GLFWwindow*& window, VkSurfaceKHR& surface);
-		static void pickPhysicalDevice(VkInstance& instance);
+		static void pickPhysicalDevice(VkInstance& instance, VkSurfaceKHR& surface);
 
 	private:
 
@@ -65,10 +65,10 @@ namespace _sp_Vulkan {
 		static VkResult createDebugUtilsMessenger(VkInstance instance,
 			const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
 
-		static int32_t ratePhysicalDevices(VkPhysicalDevice device, VkSurfaceKHR surface);
+		static int32_t ratePhysicalDevices(VkPhysicalDevice& device, VkSurfaceKHR& surface);
 		static SwapchainSupportDetails getDeviceSwapchainDetails(VkPhysicalDevice device, VkSurfaceKHR surface);
 
 	};
 
-
+	*/
 }

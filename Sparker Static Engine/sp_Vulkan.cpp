@@ -5,9 +5,9 @@ void sp_Vulkan::vulkanStart(sp_Window iWindow) {
 	window = iWindow;
 	glWindow = window.getGLWindow();
 
-	_sp_Vulkan::startup::createInstance(instance);
-	_sp_Vulkan::startup::setupDebugMessenger(instance, debugMessenger);
-	_sp_Vulkan::startup::createSurface(instance, glWindow, surface);
+	createInstance();
+	setupDebugMessenger();
+	createSurface();
 	pickPhysicalDevice();
 	createLogicalDevice();
 	createSwapchain();
@@ -166,11 +166,8 @@ void sp_Vulkan::createInstance() {
 		createInfo.pNext = nullptr;
 	}
 	VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
-	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to create vulkan instance (aww)");
-	} else {
-		DCout(SP_INFO, "Created vulkan instance (YIPEEE)");
-	}
+
+	sp_Console::vkResultCheck(SP_FATAL, result, "Created Vulkan instance", "Failed to create Vulkan instance", 100);
 }
 
 vector<const char*> sp_Vulkan::getRequiredExtensions(bool debug) {
@@ -208,16 +205,7 @@ void sp_Vulkan::createSurface() {
 	VkResult result = glfwCreateWindowSurface(instance, glWindow, nullptr, &surface);
 
 
-	if (result != VK_SUCCESS) {
-		if (result == VK_ERROR_EXTENSION_NOT_PRESENT) {
-			DCout(SP_FATAL, "Failed to create window surface because of absent extension!");
-			assert(false);
-		}
-		DCout(SP_FATAL, "Failed to create window surface!");
-		assert(false);
-	}
-	//If result == VK_SUCCESS
-	DCout(SP_INFO, "Created window surface (FINALLY)!");
+	sp_Console::vkResultCheck(SP_FATAL, result, "Created window surface", "Failed to create window surface!", 101);
 }
 #pragma endregion
 
@@ -236,15 +224,13 @@ void sp_Vulkan::setupDebugMessenger() {
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
 	populateDebugMessenger(createInfo);
 	
-	if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
-		DCout(SP_ERROR, "Failed to setup debug messenger!");
-	}
+	VkResult debugCreateResult = CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger);
+	sp_Console::vkResultCheck(SP_ERROR, debugCreateResult, "Created debug messenger", "Failed to create debug messenger!");
 }
 
-VkResult sp_Vulkan::CreateDebugUtilsMessengerEXT(VkInstance instance,
-	const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+VkResult sp_Vulkan::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
 
-	auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+	PFN_vkCreateDebugUtilsMessengerEXT func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 
 	if (func != nullptr) {
 		return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
@@ -254,7 +240,7 @@ VkResult sp_Vulkan::CreateDebugUtilsMessengerEXT(VkInstance instance,
 }
 
 void sp_Vulkan::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator){
-	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+	PFN_vkDestroyDebugUtilsMessengerEXT func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 	if (func != nullptr) {
 		func(instance, debugMessenger, pAllocator);
 	}
@@ -282,6 +268,7 @@ void sp_Vulkan::pickPhysicalDevice() {
 	}
 
 	if (mPhysicalDevice == VK_NULL_HANDLE) DCout(SP_FATAL, "Failed to find suitable GPU!");
+	sp_Console::fatalExit(mPhysicalDevice == VK_NULL_HANDLE, "Failed to find suitable GPU!", 102);
 
 	physicalDevice = mPhysicalDevice;
 }
@@ -985,51 +972,85 @@ uint32_t sp_Vulkan::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags pr
 		}
 	}
 
-	DCout(SP_FATAL, "Failed to find suitable memory type!");
-	assert(false);
+	sp_Console::fatalExit(true, "Failed to find suitable memory type!", 110);
 }
 
 void sp_Vulkan::createVertexBuffer(){
-	VkBufferCreateInfo vertexBufferInfo{};
-	vertexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	vertexBufferInfo.size = sizeof(vertices[0]) * vertices.size();
-	vertexBufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-	vertexBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-	int result = vkCreateBuffer(device, &vertexBufferInfo, nullptr, &vertexBuffer);
+	VkBuffer stagingBuffer;
+	VkDeviceMemory stagingBufferMemory;
+	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
-	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to create vertex buffer!");
-		DCout(SP_FATAL, to_string(result));
-		assert(false);
-	} else {
-		DCout(SP_INFO, "Created vertex buffer");
-	}
+
+	void* data;
+	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+	memcpy(data, vertices.data(), (size_t)bufferSize);
+	vkUnmapMemory(device, stagingBufferMemory);
+
+	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
+
+	copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
+
+	vkDestroyBuffer(device, stagingBuffer, nullptr);
+	vkFreeMemory(device, stagingBufferMemory, nullptr);
+}
+
+void sp_Vulkan::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory){
+	VkBufferCreateInfo bufferInfo{};
+	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferInfo.size = size;
+	bufferInfo.usage = usage;
+	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+	VkResult result = vkCreateBuffer(device, &bufferInfo, nullptr, &buffer);
 
 	VkMemoryRequirements memRequirements;
-	vkGetBufferMemoryRequirements(device, vertexBuffer, &memRequirements);
+	vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
 
 	VkMemoryAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 
-	result = vkAllocateMemory(device, &allocInfo, nullptr, &vertexBufferMemory);
-	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to allocate vertex buffer memory!");
-		DCout(SP_FATAL, to_string(result));
-		assert(false);
-	}
-	else {
-		DCout(SP_INFO, "Allocated vertex buffer memory");
-	}
+	result = vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory);
+	sp_Console::vkResultCheck(SP_FATAL, result, "Allocated buffer memory", "Failed to allocate vertex buffer memory!", 112);
 
-	vkBindBufferMemory(device, vertexBuffer, vertexBufferMemory, 0);
+	vkBindBufferMemory(device, buffer, bufferMemory, 0);
+}
 
-	void* data;
-	vkMapMemory(device, vertexBufferMemory, 0, vertexBufferInfo.size, 0, &data);
-	memcpy(data, vertices.data(), (size_t)vertexBufferInfo.size);
-	vkUnmapMemory(device, vertexBufferMemory);
+void sp_Vulkan::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size){
+	VkCommandBufferAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandPool = commandPool;
+	allocInfo.commandBufferCount = 1;
+
+	VkCommandBuffer commandBuffer;
+	vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer);
+
+	VkCommandBufferBeginInfo beginInfo{};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+	vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+	VkBufferCopy copyRegion{};
+	copyRegion.srcOffset = 0;
+	copyRegion.dstOffset = 0;
+	copyRegion.size = size;
+	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
+	vkEndCommandBuffer(commandBuffer);
+
+	VkSubmitInfo submitInfo{};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &commandBuffer;
+
+	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+	vkQueueWaitIdle(graphicsQueue);
+	vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
 
 #pragma endregion

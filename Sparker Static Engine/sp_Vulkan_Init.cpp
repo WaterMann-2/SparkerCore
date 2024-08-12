@@ -1,5 +1,5 @@
 #include "sp_Vulkan_Init.h"
-
+/*
 void _sp_Vulkan::startup::createInstance(VkInstance& instance) {
 	if (EnableValidationLayers && !checkValidationLayerSupport()) {
 		DCout(SP_ERROR, "Validation layers requested but not available!");
@@ -132,7 +132,7 @@ void _sp_Vulkan::startup::createSurface(VkInstance& instance, GLFWwindow*& windo
 	VkResultCheck(SP_FATAL, surfaceCreateResult, "Surface successfully created", "Failed to create surface!", true, 100);
 }
 
-void _sp_Vulkan::startup::pickPhysicalDevice(VkInstance& instance){
+void _sp_Vulkan::startup::pickPhysicalDevice(VkInstance& instance, VkSurfaceKHR& surface){
 	VkPhysicalDevice physicalDevice = NULL;
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
@@ -148,7 +148,7 @@ void _sp_Vulkan::startup::pickPhysicalDevice(VkInstance& instance){
 	VkPhysicalDevice bestDevice = NULL;
 
 	for (int i = 0; i < deviceCount; i++) {
-		deviceScores[i] = ratePhysicalDevices(devices[i]);
+		deviceScores[i] = ratePhysicalDevices(devices[i], surface);
 
 		if (deviceScores[i] > bestScore) {
 			bestScore = deviceScores[i];
@@ -160,7 +160,7 @@ void _sp_Vulkan::startup::pickPhysicalDevice(VkInstance& instance){
 
 }
 
-int32_t _sp_Vulkan::startup::ratePhysicalDevices(VkPhysicalDevice device, VkSurfaceKHR surface) {
+int32_t _sp_Vulkan::startup::ratePhysicalDevices(VkPhysicalDevice& device, VkSurfaceKHR& surface) {
 	
 	VkPhysicalDeviceProperties deviceProperties;
 	vkGetPhysicalDeviceProperties(device, &deviceProperties);
@@ -191,6 +191,7 @@ int32_t _sp_Vulkan::startup::ratePhysicalDevices(VkPhysicalDevice device, VkSurf
 	//If swapchain is not adequate OR unavailable
 	if (swapchainAdequate) return INT32_MIN;
 
+	return 0;
 }
 
 SwapchainSupportDetails _sp_Vulkan::startup::getDeviceSwapchainDetails(VkPhysicalDevice device, VkSurfaceKHR surface){
@@ -198,6 +199,7 @@ SwapchainSupportDetails _sp_Vulkan::startup::getDeviceSwapchainDetails(VkPhysica
 
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
 
-	
+	return details;
 }
 
+*/
