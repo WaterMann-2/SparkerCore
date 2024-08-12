@@ -14,7 +14,7 @@ std::array<VkVertexInputAttributeDescription, 2> Vertex::getAttributeDescription
 
 	getAttributeDescriptions[0].binding = 0;
 	getAttributeDescriptions[0].location = 0;
-	getAttributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+	getAttributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
 	getAttributeDescriptions[0].offset = offsetof(Vertex, pos);
 
 	getAttributeDescriptions[1].binding = 0;

@@ -14,9 +14,8 @@
 #include <GLFW/glfw3.h>
 //#define GLFW_EXPOSE_NATIVE_WIN32
 //#include <GLFW/glfw3native.h>
-
-#include "sp_Debug.h"
-#include "sp_VkStructs.h"
+//#define STB_IMAGE_IMPLEMENTATION
+//#include <stb_image.h>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -24,15 +23,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include <vulkan/vulkan.h>
 
+#include "sp_Debug.h"
+#include "sp_VkStructs.h"
 #include "sp_Window.h"
 #include "sp_Utility.h"
 #include "sp_Primitive.h"
-
-#include <vulkan/vulkan.h>
-
 
 using std::uint32_t;
 using std::string;
@@ -55,13 +52,21 @@ const bool enableValidationLayers = false;
 const vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 const std::vector<Vertex> vertices = {
-    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+    {{-0.5f, 0.5f, -0.5f}, {0.5f, 0.5f, 0.0f}},
+    {{0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+    {{-0.5f, 0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+	{{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, 0.0f}},
+	{{0.5f, -0.5f, -0.5f}, {0.5f, 0.0f, 0.5f}},
+	{{0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+	{{-0.5f, -0.5f, 0.5f}, {0.0f, 0.5f, 0.5f}}
 };
 const std::vector<uint16_t> indices = {
-	0, 1, 2, 2, 3, 0
+	0, 1, 2, 2, 3, 0,
+	3, 2, 6, 6, 7, 3,
+	0, 3, 4, 4, 3, 7,
+	5, 4, 6, 4, 7, 6, 
+	1, 5, 2, 2, 5, 6
 };
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -206,6 +211,7 @@ private:
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
+	void createTextureImage();
 
 
 };
