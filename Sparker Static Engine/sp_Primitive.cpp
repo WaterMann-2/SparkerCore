@@ -20,6 +20,7 @@ std::array<VkVertexInputAttributeDescription, 2> Vertex::getAttributeDescription
 	getAttributeDescriptions[1].binding = 0;
 	getAttributeDescriptions[1].location = 1;
 	getAttributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+	getAttributeDescriptions[1].offset = offsetof(Vertex, color);
 
 	return getAttributeDescriptions;
 }

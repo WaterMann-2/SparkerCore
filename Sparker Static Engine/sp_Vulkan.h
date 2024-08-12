@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <limits>
 #include <algorithm>
+#include <chrono>
 
 //#define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
@@ -21,6 +22,10 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 #include "sp_Window.h"
 #include "sp_Utility.h"
@@ -49,10 +54,14 @@ const bool enableValidationLayers = false;
 
 const vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
-const vector<Vertex> vertices = {
-	{{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
-	{{0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
-	{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+const std::vector<Vertex> vertices = {
+    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+};
+const std::vector<uint16_t> indices = {
+	0, 1, 2, 2, 3, 0
 };
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -90,6 +99,9 @@ private:
 	vector<VkImageView> swapchainImageViews;
 
 	VkRenderPass renderPass;
+	VkDescriptorSetLayout descriptorSetLayout;
+	VkDescriptorPool descriptorPool;
+	vector<VkDescriptorSet> descriptorSets;
 	VkPipelineLayout pipelineLayout;
 
 	VkPipeline graphicsPipeline;
@@ -105,6 +117,13 @@ private:
 
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;
+
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
+
+	vector<VkBuffer> uniformBuffers;
+	vector<VkDeviceMemory> uniformBuffersMemory;
+	vector<void*> uniformBuffersMapped;
 
 
 	//Startup
@@ -157,6 +176,8 @@ private:
 
 	void createGraphicsPipeline();
 	VkShaderModule createShaderModule(const vector<char>& code);
+
+	void createDescriptorSetLayout();
 	
 
 	void createRenderPass();
@@ -173,9 +194,19 @@ private:
 	//Drawing
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	void createVertexBuffer();
+	void createIndexBuffer();
+
+	void createDescriptorPool();
+	void createDescriptorSets();
+
+	void createUniformBuffers();
+	void updateUniformBuffer(uint32_t currentImage);
+	inline void cleanupUniformBuffers();
 
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
+
 
 };
 
