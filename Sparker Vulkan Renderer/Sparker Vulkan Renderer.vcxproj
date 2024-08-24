@@ -128,7 +128,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="sp_Shader.h" />
     <ClInclude Include="sp_VulkanIncludes.h" />
   </ItemGroup>
   <ItemGroup>

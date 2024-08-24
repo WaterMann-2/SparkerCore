@@ -1,7 +1,5 @@
 #pragma once
 
-#include "sp_Vulkan_Init.h"
-
 #include <iostream>
 #include <vector>
 #include <cstdint>
@@ -47,7 +45,7 @@ const bool enableValidationLayers = false;
 
 #define debugCallback sp_Debug::VkDebugCallback
 
-//const vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+const vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
 const vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
@@ -223,7 +221,7 @@ namespace _sp_Vulkan {
 	public:
 
 	public:
-		VkSwapchainKHR* createSwapchain(VkDevice& srcDevice, VkPhysicalDevice& srcPhysicalDevice, VkSurfaceKHR& srcSurface, GLFWwindow* window);
+		VkSwapchainKHR* createSwapchain(VkDevice& srcDevice, VkPhysicalDevice& srcPhysicalDevice, VkSurfaceKHR& srcSurface, GLFWwindow*& window);
 
 		void recreateSwapchain(VkDevice& srcDevice, VkPhysicalDevice& srcPhysicalDevice, VkSurfaceKHR& srcSurface);
 
