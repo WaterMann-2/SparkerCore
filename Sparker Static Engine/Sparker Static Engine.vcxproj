@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="sp_Mesh.cpp" />
     <ClCompile Include="sp_Assert.cpp" />
     <ClCompile Include="sp_Debug.cpp" />
     <ClCompile Include="sp_Enter.cpp" />
@@ -29,6 +30,7 @@
     <ClCompile Include="sp_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sp_Mesh.h" />
     <ClInclude Include="sp_ExitInfo.h" />
     <ClInclude Include="Sparker Engine.h" />
     <ClInclude Include="sp_Assert.h" />
