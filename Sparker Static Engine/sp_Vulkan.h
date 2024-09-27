@@ -73,13 +73,13 @@ class sp_Vulkan{
 
 public:
 
-	void vulkanStart(sp_Window iWindow);
+	void vulkanStart(SpWindow iWindow);
 	void vulkanCleanup();
 
 	void drawFrame();
 
 private:
-	sp_Window window;
+	SpWindow window;
 	GLFWwindow* glWindow;
 
 	uint32_t extensionCount = 0;
