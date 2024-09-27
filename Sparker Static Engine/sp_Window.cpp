@@ -1,11 +1,30 @@
-#pragma once
 #include "sp_Window.h"
 
-void sp_Window::destroy(){
+bool SpWindow::getFramebufferResized() {
+	if (framebufferResized) {
+		framebufferResized = false;
+		return true;
+	}
+	return false;
+}
+
+void SpWindow::destroy(){
 	glfwDestroyWindow(window);
 }
 
-bool sp_Window::newWindow(std::string windowName){
+void SpWindow::setInput(SpInput* input){
+	input->setWindow(window);
+	mainInput = input;
+
+	mainInput->setPosInfo(&posInfo);
+	mainInput->setAttendanceInfo(&attendInfo);
+}
+
+SpWindow::operator GLFWwindow* () {
+	return window;
+}
+
+bool SpWindow::newWindow(std::string windowName){
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -16,20 +35,108 @@ bool sp_Window::newWindow(std::string windowName){
 	glfwMakeContextCurrent(window);
 	glfwSetWindowUserPointer(window, this);
 	glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
-
+	
+	glfwSetCursorPosCallback(window, MouseDeltaCallback);
+	glfwSetCursorEnterCallback(window, MouseEnteredCallback);
 
 	return window;
 }
 
-GLFWwindow* sp_Window::getGLWindow() {
+GLFWwindow* SpWindow::getGLWindow() {
 	return *&window;
 }
 
-void sp_Window::end() {
+bool SpWindow::mouseEnabled(){
+	return attendInfo.enabled;
+}
+
+void SpWindow::enableMouse(bool status){
+	attendInfo.enabled = status;
+
+	if (status) {
+		attendInfo.firstMouse = true;
+
+		double xpos, ypos;
+
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		posInfo.position = glm::vec2(xpos, ypos);
+		posInfo.lastPos = glm::vec2(xpos, ypos);
+
+		posInfo.delta = glm::vec3(0.0f);
+	}
+
+}
+
+
+void SpWindow::endFrame() {
+	glfwPollEvents();
+
+	frameTime = glfwGetTime() - lastFrame;
+	lastFrame = frameTime + lastFrame;
+
+	calcMousedelta();
+
+}
+
+void SpWindow::end() {
 	glfwTerminate();
 }
 
-void sp_Window::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-	sp_Window* Window = reinterpret_cast<sp_Window*>(glfwGetWindowUserPointer(window));
+glm::ivec2 SpWindow::getDimensions(){
+	return glm::ivec2((int) dimension.x, (int) dimension.y);
+}
+
+float SpWindow::getDeltaTime() {
+	return frameTime;
+}
+
+void SpWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+	SpWindow* Window = reinterpret_cast<SpWindow*>(glfwGetWindowUserPointer(window));
 	Window->framebufferResized = true;
+}
+
+void SpWindow::MouseDeltaCallback(GLFWwindow* window, double xpos, double ypos) {
+	SpWindow* Window = reinterpret_cast<SpWindow*>(glfwGetWindowUserPointer(window));
+
+	if (!Window->attendInfo.enabled) {
+		return;
+	}
+
+	if (!Window->attendInfo.entered) return;
+
+	float xPos = (float)xpos;
+	float yPos = (float)ypos;
+
+	Window->posInfo.position = glm::vec2(xpos, ypos);
+	
+	Window->mouseCallbackCalled = true;
+}
+
+void SpWindow::MouseEnteredCallback(GLFWwindow* window, int entered) {
+	SpWindow* Window = reinterpret_cast<SpWindow*>(glfwGetWindowUserPointer(window));
+	
+	if (entered) {
+		Window->attendInfo.entered = true;
+		return;
+	}
+
+	if (!entered) {
+		Window->attendInfo.firstMouse = true;
+		Window->attendInfo.entered = false;
+		return;
+	}
+}
+
+void SpWindow::calcMousedelta(){
+
+	//When the mouse is captured into the screen this is so it doesn't flick the camera
+	if (attendInfo.firstMouse && attendInfo.entered == true) {
+		posInfo.lastPos = posInfo.position;
+		attendInfo.firstMouse = false;
+	}
+
+	posInfo.delta = posInfo.position - posInfo.lastPos;
+
+	posInfo.lastPos = posInfo.position;
 }

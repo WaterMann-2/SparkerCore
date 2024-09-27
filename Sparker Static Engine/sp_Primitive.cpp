@@ -26,5 +26,10 @@ std::array<VkVertexInputAttributeDescription, 3> Vertex::getAttributeDescription
 	getAttributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
 	getAttributeDescriptions[2].offset = offsetof(Vertex, texCoord);
 
+	getAttributeDescriptions[2].binding = 0;
+	getAttributeDescriptions[2].location = 2;
+	getAttributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+	getAttributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+
 	return getAttributeDescriptions;
 }

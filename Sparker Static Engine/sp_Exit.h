@@ -11,6 +11,6 @@ class sp_Exit{
 
 public:
 	
-	sp_Exit(sp_ExitInfo& info, sp_Window& window, sp_Vulkan& vulkan);
+	sp_Exit(sp_ExitInfo& info, SpWindow& window, sp_Vulkan& vulkan);
 };
 

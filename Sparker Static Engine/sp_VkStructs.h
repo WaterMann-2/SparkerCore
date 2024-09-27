@@ -19,7 +19,7 @@ struct QueueFamilyIndices {
 	}
 };
 
-struct SwapchainSupportDetails {
+struct SwapchainSupportDetails  {
 	VkSurfaceCapabilitiesKHR capabilities;
 	vector<VkSurfaceFormatKHR> formats;
 	vector <VkPresentModeKHR> presentModes;

@@ -128,10 +128,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Debug.h" />
+    <ClInclude Include="Swapchain.h" />
     <ClInclude Include="sp_VulkanIncludes.h" />
+    <ClInclude Include="VkGraphics.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sp_Shader.cpp" />
+    <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Swapchain.cpp" />
+    <ClCompile Include="VkGraphics.cpp" />
+    <ClCompile Include="Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Sparker Renderer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

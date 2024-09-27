@@ -2,7 +2,7 @@
 #define SP_DEBUG_H
 
 #ifdef _DEBUG
-	#define DCout(severity, message)  sp_Console::consoleWrite(severity, message)
+	#define DCout(severity, message)  SpConsole::consoleWrite(severity, message)
 #else
 	#define DCout(severity, message) do {} while(false)
 #endif
@@ -23,12 +23,18 @@
 #include <vulkan/vk_platform.h>
 #include <vulkan/vulkan_core.h>
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 using std::string;
 
 using std::cout;
 using std::endl;
 
-class sp_Debug{
+class SpDebug{
 
 public:
 
@@ -38,13 +44,19 @@ public:
 		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 		void* pUserData);
 
+	static string vec2ToStr(glm::vec2 vector);
+	static string vec3ToStr(glm::vec3 vector);
 };
 
-class sp_Console {
+class SpConsole {
 
 public:
 
 	static void consoleWrite(uint8_t severity, string message);
+	static void vkResultCheck(uint8_t severity, VkResult result, string successMessage, string failMessage);
+	static void vkResultCheck(uint8_t severity, VkResult result, string successMessage, string failMessage, int exitCode);
+
+	static void fatalExit(bool condition, string extMessage, int exitCode);
 };
 
 struct sp_ErrorLocation {

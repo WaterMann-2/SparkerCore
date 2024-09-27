@@ -1,7 +1,7 @@
 #include "sp_Vulkan.h"
 
-void sp_Vulkan::vulkanStart(sp_Window srcWindow) {
-	DCout(SP_INFO, "Initalizing Vulkan");
+void sp_Vulkan::vulkanStart(SpWindow srcWindow) {
+	DCout(SP_MESSAGE_INFO, "Initalizing Vulkan");
 	window = srcWindow;
 	glWindow = window.getGLWindow();
 
@@ -30,6 +30,7 @@ void sp_Vulkan::vulkanStart(sp_Window srcWindow) {
 }
 
 void sp_Vulkan::vulkanCleanup(){
+	vkDeviceWaitIdle(device);
 	cleanupSwapchain();
 	cleanupUniformBuffers();
 	vkDestroyDescriptorPool(device, descriptorPool, nullptr);
@@ -61,10 +62,11 @@ void sp_Vulkan::drawFrame() {
 	uint32_t imageIndex;
 	VkResult result = vkAcquireNextImageKHR(device, Swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
 	
-	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window.getFramebufferResized()) {
+	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 		recreateSwapchain();
+		return;
 	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-		DCout(SP_FATAL, "Failed to aquire swapchain image!");
+		DCout(SP_MESSAGE_FATAL, "Failed to aquire swapchain image!");
 	}
 
 
@@ -73,6 +75,8 @@ void sp_Vulkan::drawFrame() {
 	vkResetCommandBuffer(commandBuffers[currentFrame], 0);
 	recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
 
+
+	cam->Update();
 	updateUniformBuffer(currentFrame);
 
 	VkSubmitInfo submitInfo{};
@@ -105,8 +109,14 @@ void sp_Vulkan::drawFrame() {
 	presentInfo.pImageIndices = &imageIndex;
 	presentInfo.pResults = nullptr;
 	
-	vkQueuePresentKHR(presentQueue, &presentInfo);
+	result = vkQueuePresentKHR(presentQueue, &presentInfo);
 
+	if (result == VK_ERROR_OUT_OF_DATE_KHR|| result == VK_SUBOPTIMAL_KHR) {
+		recreateSwapchain();
+	}
+	else if (result != VK_SUCCESS) {
+		SpConsole::fatalExit(true, "Failed to present swapchain image!" + std::to_string(result), 300);
+	}
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
@@ -120,7 +130,7 @@ bool sp_Vulkan::checkValidationLayerSupport() {
 	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
 	
-	DCout(SP_INFO, std::to_string(layerCount) + " Vulkan extensions supported");
+	DCout(SP_MESSAGE_INFO, std::to_string(layerCount) + " Vulkan extensions supported");
 	std::vector<VkLayerProperties> availableLayers(layerCount);
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
@@ -143,7 +153,7 @@ bool sp_Vulkan::checkValidationLayerSupport() {
 void sp_Vulkan::createInstance() {
 	
 	if (enableValidationLayers && !checkValidationLayerSupport()) {
-		DCout(SP_FATAL, "Validation layers requested but unavailable!");
+		DCout(SP_MESSAGE_FATAL, "Validation layers requested but unavailable!");
 	}
 
 	// VK App info
@@ -185,7 +195,7 @@ void sp_Vulkan::createInstance() {
 	}
 	VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
 
-	sp_Console::vkResultCheck(SP_FATAL, result, "Created Vulkan instance", "Failed to create Vulkan instance", 100);
+	SpConsole::vkResultCheck(SP_MESSAGE_FATAL, result, "Created Vulkan instance", "Failed to create Vulkan instance", 100);
 }
 
 vector<const char*> sp_Vulkan::getRequiredExtensions(bool debug) {
@@ -199,12 +209,12 @@ vector<const char*> sp_Vulkan::getRequiredExtensions(bool debug) {
 	if (enableValidationLayers) extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
 	if (debug) {
-		DCout(SP_INFO, "Required extension count: " + std::to_string(extensions.size()));
+		DCout(SP_MESSAGE_INFO, "Required extension count: " + std::to_string(extensions.size()));
 		string message = "";
 		for (uint32_t i = 0; i < extensions.size(); i++) {
 			message = message + "\n        " + extensions[i];
 		}
-		DCout(SP_INFO, "Extensions: " + message + "\n -------------");
+		DCout(SP_MESSAGE_INFO, "Extensions: " + message + "\n -------------");
 	}
 	
 
@@ -217,13 +227,13 @@ void sp_Vulkan::createSurface() {
 
 	int vulkanSupported = glfwVulkanSupported();
 	if (vulkanSupported == GLFW_TRUE) {
-		DCout(SP_INFO, "Vulkan is available");
+		DCout(SP_MESSAGE_INFO, "Vulkan is available");
 	}
 
 	VkResult result = glfwCreateWindowSurface(instance, glWindow, nullptr, &surface);
 
 
-	sp_Console::vkResultCheck(SP_FATAL, result, "Created window surface", "Failed to create window surface!", 101);
+	SpConsole::vkResultCheck(SP_MESSAGE_FATAL, result, "Created window surface", "Failed to create window surface!", 101);
 }
 #pragma endregion
 
@@ -243,7 +253,7 @@ void sp_Vulkan::setupDebugMessenger() {
 	populateDebugMessenger(createInfo);
 	
 	VkResult debugCreateResult = CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger);
-	sp_Console::vkResultCheck(SP_ERROR, debugCreateResult, "Created debug messenger", "Failed to create debug messenger!");
+	SpConsole::vkResultCheck(SP_MESSAGE_ERROR, debugCreateResult, "Created debug messenger", "Failed to create debug messenger!");
 }
 
 VkResult sp_Vulkan::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
@@ -273,7 +283,7 @@ void sp_Vulkan::pickPhysicalDevice() {
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
-	if (deviceCount == 0) DCout(SP_FATAL, "Failed to find GPU with Vulkan support!");
+	if (deviceCount == 0) DCout(SP_MESSAGE_FATAL, "Failed to find GPU with Vulkan support!");
 	vector<VkPhysicalDevice> devices(deviceCount);
 
 	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
@@ -285,8 +295,8 @@ void sp_Vulkan::pickPhysicalDevice() {
 		}
 	}
 
-	if (mPhysicalDevice == VK_NULL_HANDLE) DCout(SP_FATAL, "Failed to find suitable GPU!");
-	sp_Console::fatalExit(mPhysicalDevice == VK_NULL_HANDLE, "Failed to find suitable GPU!", 102);
+	if (mPhysicalDevice == VK_NULL_HANDLE) DCout(SP_MESSAGE_FATAL, "Failed to find suitable GPU!");
+	SpConsole::fatalExit(mPhysicalDevice == VK_NULL_HANDLE, "Failed to find suitable GPU!", 102);
 
 	physicalDevice = mPhysicalDevice;
 }
@@ -308,7 +318,7 @@ bool sp_Vulkan::isSuitableDevice(VkPhysicalDevice device) {
 
 	QueueFamilyIndices indices = findQueueFamilies(device);
 
-	DCout(SP_INFO, deviceProperties.deviceName);
+	DCout(SP_MESSAGE_INFO, deviceProperties.deviceName);
 
 	#ifdef _DEBUG
 	string deviceName = string("Device: ") + deviceProperties.deviceName;
@@ -407,9 +417,9 @@ void sp_Vulkan::createLogicalDevice() {
 	}
 
 	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to create logical device!");
+		DCout(SP_MESSAGE_FATAL, "Failed to create logical device!");
 	} else {
-		DCout(SP_INFO, "Created logical device!");
+		DCout(SP_MESSAGE_INFO, "Created logical device!");
 	}
 
 	vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
@@ -465,10 +475,10 @@ void sp_Vulkan::createSwapchain() {
 	int result = vkCreateSwapchainKHR(device, &createInfo, nullptr, &Swapchain);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to create swap chain!");
-		DCout(SP_FATAL, "Error code: " + std::to_string(result));
+		DCout(SP_MESSAGE_FATAL, "Failed to create swap chain!");
+		DCout(SP_MESSAGE_FATAL, "Error code: " + std::to_string(result));
 	} else if (result == VK_SUCCESS) {
-		DCout(SP_INFO, "Created swap chain!");
+		DCout(SP_MESSAGE_INFO, "Created swap chain!");
 	}
 
 	vkGetSwapchainImagesKHR(device, Swapchain, &imageCount, nullptr);
@@ -481,7 +491,6 @@ void sp_Vulkan::createSwapchain() {
 }
 
 void sp_Vulkan::recreateSwapchain() {
-	
 
 	int width = 0, height = 0;
 	glfwGetFramebufferSize(window, &width, &height);
@@ -498,6 +507,8 @@ void sp_Vulkan::recreateSwapchain() {
 	createSwapchain();
 	createImageViews();
 	createFramebuffers();
+
+	cam->size = glm::ivec2(width, height);
 }
 
 void sp_Vulkan::cleanupSwapchain() {
@@ -537,7 +548,7 @@ VkSurfaceFormatKHR sp_Vulkan::chooseSwapSurfaceFormat(const vector<VkSurfaceForm
 		if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) return availableFormat;
 	}
 
-	DCout(SP_WARNING, "Unable to find desired format, defaulting to first available format");
+	DCout(SP_MESSAGE_WARNING, "Unable to find desired format, defaulting to first available format");
 	return availableFormats[0];
 }
 
@@ -594,16 +605,16 @@ void sp_Vulkan::createImageViews() {
 		bool result = vkCreateImageView(device, &createInfo, nullptr, &swapchainImageViews[i]);
 
 		if (result != VK_SUCCESS) {
-			DCout(SP_FATAL, "Failed to create image view!");
-			DCout(SP_FATAL, "Error Code: " + to_string(result));
+			DCout(SP_MESSAGE_FATAL, "Failed to create image view!");
+			DCout(SP_MESSAGE_FATAL, "Error Code: " + to_string(result));
 		} else {
-			DCout(SP_INFO, string("Created Image View ") + to_string(i + 1));
+			DCout(SP_MESSAGE_INFO, string("Created Image View ") + to_string(i + 1));
 		}
 	}
 }
 
 void sp_Vulkan::destroyImageViews() {
-	for (VkImageView& imageView : swapchainImageViews) {
+	for (auto imageView : swapchainImageViews) {
 		vkDestroyImageView(device, imageView, nullptr);
 	}
 }
@@ -716,10 +727,10 @@ void sp_Vulkan::createGraphicsPipeline() {
 	int pipelineLayoutResult = vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout);
 
 	if(pipelineLayoutResult != VK_SUCCESS){
-		DCout(SP_FATAL, "Failed to create pipeline layout!");
-		DCout(SP_FATAL, to_string(pipelineLayoutResult));
+		DCout(SP_MESSAGE_FATAL, "Failed to create pipeline layout!");
+		DCout(SP_MESSAGE_FATAL, to_string(pipelineLayoutResult));
 	} else {
-		DCout(SP_INFO, "Created pipeline layout");
+		DCout(SP_MESSAGE_INFO, "Created pipeline layout");
 	}
 
 	VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -744,15 +755,15 @@ void sp_Vulkan::createGraphicsPipeline() {
 		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline);
 	}
 	catch (std::exception e) {
-		sp_Console::fatalExit(true, e.what(), 109);
+		SpConsole::fatalExit(true, e.what(), 109);
 	}
 
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to create graphics pipeline");
-		DCout(SP_FATAL, to_string(result));
+		DCout(SP_MESSAGE_FATAL, "Failed to create graphics pipeline");
+		DCout(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_INFO, "Created graphics pipeline");
+		DCout(SP_MESSAGE_INFO, "Created graphics pipeline");
 	}
 
 
@@ -770,10 +781,10 @@ VkShaderModule sp_Vulkan::createShaderModule(const vector<char>& code){
 	int result = vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to create shader module!");
-		DCout(SP_FATAL, to_string(result));
+		DCout(SP_MESSAGE_FATAL, "Failed to create shader module!");
+		DCout(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_INFO, "Created shader module!");
+		DCout(SP_MESSAGE_INFO, "Created shader module!");
 	}
 
 	return shaderModule;
@@ -793,7 +804,7 @@ void sp_Vulkan::createDescriptorSetLayout(){
 	layoutInfo.pBindings = &uboLayoutBinding;
 
 	VkResult result = vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout);
-	sp_Console::vkResultCheck(SP_FATAL, result, "Created descriptor set layout", "Failed to create descriptor set layout!", 115);
+	SpConsole::vkResultCheck(SP_MESSAGE_FATAL, result, "Created descriptor set layout", "Failed to create descriptor set layout!", 115);
 	
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -843,10 +854,10 @@ void sp_Vulkan::createRenderPass() {
 	int result = vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to create render pass!");
-		DCout(SP_FATAL, to_string(result));
+		DCout(SP_MESSAGE_FATAL, "Failed to create render pass!");
+		DCout(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_INFO, "Created render pass");
+		DCout(SP_MESSAGE_INFO, "Created render pass");
 	}
 
 }
@@ -869,17 +880,17 @@ void sp_Vulkan::createFramebuffers(){
 		bool result = vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapchainFramebuffers[i]);
 
 		if (result != VK_SUCCESS) {
-			DCout(SP_FATAL, "Framebuffer not created!");
-			DCout(SP_FATAL, to_string(result));
+			DCout(SP_MESSAGE_FATAL, "Framebuffer not created!");
+			DCout(SP_MESSAGE_FATAL, to_string(result));
 		} else {
-			DCout(SP_INFO, "Framebuffer created");
+			DCout(SP_MESSAGE_INFO, "Framebuffer created");
 		}
 
 	}
 }
 
 void sp_Vulkan::destroyFramebuffers(){
-	for (VkFramebuffer framebuffer : swapchainFramebuffers) {
+	for (auto framebuffer : swapchainFramebuffers) {
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}
 }
@@ -895,10 +906,10 @@ void sp_Vulkan::createCommandPool() {
 	bool result = vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to create command pool!");
-		DCout(SP_FATAL, to_string(result));
+		DCout(SP_MESSAGE_FATAL, "Failed to create command pool!");
+		DCout(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_INFO, "Created command pool");
+		DCout(SP_MESSAGE_INFO, "Created command pool");
 	}
 }
 
@@ -913,10 +924,10 @@ void sp_Vulkan::createCommandBuffer() {
 	bool result = vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data());
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to create command buffers!");
-		DCout(SP_FATAL, to_string(result));
+		DCout(SP_MESSAGE_FATAL, "Failed to create command buffers!");
+		DCout(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_INFO, "Created command buffers");
+		DCout(SP_MESSAGE_INFO, "Created command buffers");
 	}
 }
 
@@ -929,8 +940,8 @@ void sp_Vulkan::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imag
 	bool result = vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_FATAL, "Failed to begin recording command buffer!");
-		DCout(SP_FATAL, to_string(result));
+		DCout(SP_MESSAGE_FATAL, "Failed to begin recording command buffer!");
+		DCout(SP_MESSAGE_FATAL, to_string(result));
 	}
 
 	VkRenderPassBeginInfo renderPassInfo{};
@@ -997,7 +1008,7 @@ void sp_Vulkan::createSyncObjects() {
 		if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
 			vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
 			vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
-			DCout(SP_FATAL, "Failed to create semaphores!");
+			DCout(SP_MESSAGE_FATAL, "Failed to create semaphores!");
 		}
 	}
 }
@@ -1025,7 +1036,7 @@ uint32_t sp_Vulkan::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags pr
 		}
 	}
 
-	sp_Console::fatalExit(true, "Failed to find suitable memory type!", 110);
+	SpConsole::fatalExit(true, "Failed to find suitable memory type!", 110);
 }
 
 void sp_Vulkan::createVertexBuffer(){
@@ -1082,7 +1093,7 @@ void sp_Vulkan::createDescriptorPool(){
 	poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
 	bool result = vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool);
-	sp_Console::fatalExit(result, "Failed to create descriptor pool!", 116);
+	SpConsole::fatalExit(result, "Failed to create descriptor pool!", 116);
 
 }
 
@@ -1096,7 +1107,7 @@ void sp_Vulkan::createDescriptorSets(){
 
 	descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
 	bool result = vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data());
-	sp_Console::fatalExit(result, "Failed to allocate descriptor sets!", 117);
+	SpConsole::fatalExit(result, "Failed to allocate descriptor sets!", 117);
 
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
 		VkDescriptorBufferInfo bufferInfo{};
@@ -1142,10 +1153,11 @@ void sp_Vulkan::updateUniformBuffer(uint32_t currentImage){
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
 	UniformBufferObject ubo{};
-	ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.proj = glm::perspective(glm::radians(45.0f), swapchainExtent.width / (float)swapchainExtent.height, 0.1f, 10.0f);
-	ubo.proj[1][1] *= -1;
+	ubo.model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.view = cam->getView();
+	ubo.proj = cam->getProj();
+
+	
 
 	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
@@ -1175,7 +1187,7 @@ void sp_Vulkan::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemo
 	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 
 	result = vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory);
-	sp_Console::vkResultCheck(SP_FATAL, result, "Allocated buffer memory", "Failed to allocate vertex buffer memory!", 112);
+	SpConsole::vkResultCheck(SP_MESSAGE_FATAL, result, "Allocated buffer memory", "Failed to allocate vertex buffer memory!", 112);
 
 	vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }
@@ -1273,13 +1285,15 @@ VkSwapchainKHR* _sp_Vulkan::Swapchain::createSwapchain(VkDevice& srcDevice, VkPh
 
 	VkResult swapCreateResult = vkCreateSwapchainKHR(*device, &swapCreateInfo, nullptr, &swapchain);
 
-	sp_Console::vkResultCheck(SP_FATAL, swapCreateResult, "Created swapchain", "Failed to create swapchain!", 109);
+	SpConsole::vkResultCheck(SP_MESSAGE_FATAL, swapCreateResult, "Created swapchain", "Failed to create swapchain!", 109);
 
 	vkGetSwapchainImagesKHR(*device, swapchain, &imageCount, nullptr);
 	swapchainImages.resize(imageCount);
 	vkGetSwapchainImagesKHR(*device, swapchain, &imageCount, nullptr);
-
+//chooseSwapExtent()
 	hasBeenCreated = true;
+
+	return &swapchain;
 }
 
 SwapchainSupportDetails _sp_Vulkan::Swapchain::querySwapchainSupport(VkPhysicalDevice& physicalDevice){
@@ -1316,7 +1330,7 @@ VkSurfaceFormatKHR _sp_Vulkan::Swapchain::chooseSwapSurfaceFormat(const vector<V
 
 	}
 
-	DCout(SP_WARNING, "Unable to find desired format, defaulting to first available format!");
+	DCout(SP_MESSAGE_WARNING, "Unable to find desired format, defaulting to first available format!");
 	return availableFormats[0];
 }
 

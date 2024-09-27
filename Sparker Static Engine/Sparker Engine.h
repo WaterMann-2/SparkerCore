@@ -7,6 +7,7 @@
 #include "sp_Debug.h"
 #include "sp_Vulkan.h"
 #include "sp_Exit.h"
+#include "Input.h"
 
 class SparkerEngine {
 

@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="sp_Mesh.cpp" />
     <ClCompile Include="sp_Assert.cpp" />
     <ClCompile Include="sp_Debug.cpp" />
@@ -30,6 +32,8 @@
     <ClCompile Include="sp_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="sp_Mesh.h" />
     <ClInclude Include="sp_ExitInfo.h" />
     <ClInclude Include="Sparker Engine.h" />
@@ -44,6 +48,7 @@
     <ClInclude Include="sp_VkStructs.h" />
     <ClInclude Include="sp_Vulkan.h" />
     <ClInclude Include="sp_Window.h" />
+    <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="compileShaders.bat" />

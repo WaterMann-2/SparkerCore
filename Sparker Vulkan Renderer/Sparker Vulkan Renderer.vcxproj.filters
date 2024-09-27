@@ -19,15 +19,47 @@
     <Filter Include="Header Files\Debug">
       <UniqueIdentifier>{eb7880a9-7130-4090-8a27-ad4563c220a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{fc2ba765-b0a0-4a24-9b9d-c72601c46699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{41ac9a14-89c2-43f9-b29c-273f3bdde55b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sp_VulkanIncludes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="VkGraphics.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Swapchain.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sp_Shader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Source Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="VkGraphics.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Swapchain.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Sparker Renderer.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
