@@ -31,8 +31,9 @@ public:
 	GLFWwindow* getGLWindow();
 
 	bool mouseEnabled();
-
 	void enableMouse(bool status);
+
+	bool mouseover();
 	
 
 private:
@@ -52,11 +53,13 @@ private:
 	MousePosInfo posInfo;
 	MouseAttendanceInfo attendInfo;
 
+	MouseInputs mouseBtnInfo;
+
 
 	static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 	static void MouseDeltaCallback(GLFWwindow* window, double xpos, double ypos);
 	static void MouseEnteredCallback(GLFWwindow* window, int entered);
-
+	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
 	void calcMousedelta();
 

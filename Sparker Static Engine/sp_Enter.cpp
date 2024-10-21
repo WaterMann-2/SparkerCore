@@ -8,6 +8,6 @@ sp_Enter::sp_Enter(sp_EnterInfo& info, sp_Vulkan& vulkan, SpWindow& window, SpIn
 	vulkan.vulkanStart(window);
 
 	window.setInput(&input);
-	
+
 	
 }

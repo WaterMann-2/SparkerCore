@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#pragma region Key Listener Structs
+
 void KeyListener::update(GLFWwindow* window){
 	int status = glfwGetKey(window, GlKey);
 
@@ -62,23 +64,67 @@ void Binding2::update(GLFWwindow* window) {
 	dir = (HiVal.pressed) ? 1.0 : dir;
 }
 
+#pragma endregion
+
+#pragma region Mouse Structs
+
+
+MouseButton::MouseButton(int glButton){
+	GlButton = glButton;
+}
+
+void MouseButton::update(GLFWwindow* window, int status){
+
+	if (status == GLFW_PRESS && pressed == false) {
+		down = true;
+		pressed = true;
+	}
+
+	if (status == GLFW_RELEASE) {
+		pressed = false;
+		up = true;
+	}
+
+}
+
+void MouseInputs::endFrame(){
+	for (int i = 0; i < 5; i++) {
+		all[i]->up = false;
+		all[i]->down = false;
+	}
+}
+#pragma endregion
+
+#pragma region SpInput
+
 SpInput::SpInput(){
 	keys.resize(0);
 	bind4Keys.resize(0);
 	bind2Keys.resize(0);
 }
 
-void SpInput::setBoundKeySize(int size) {
-	keys.resize(size);
+void SpInput::bruteListen(){
+	if (keys.empty()) goto VectorListen;
+	for (KeyListener& key : keys) {
+		key.update(window);
+	}
+
+VectorListen:
+	if (bind4Keys.empty()) goto ScalarListen;
+	for (Binding4& bKey : bind4Keys) {
+		bKey.update(window);
+	}
+
+ScalarListen:
+	if (bind2Keys.empty()) return;
+	for (Binding2& scalKey : bind2Keys) {
+		scalKey.update(window);
+	}
 }
 
-void SpInput::setBinding2Size(int size) {
-	bind2Keys.resize(size);
-}
 
-void SpInput::setBinding4Size(int size) {
-	bind4Keys.resize(size);
-}
+//ADD KEY FUNCTIONS
+#pragma region Add Functions
 
 KeyListener* SpInput::addKey(int key){
 	KeyListener newKey{};
@@ -145,24 +191,21 @@ Binding2* SpInput::addBinding2(const char* name, int inHiVal, int inLoVal){
 	currentCountB2++;
 	return &bind2Keys[currentCountB2 - 1];
 }
+#pragma endregion
 
-void SpInput::bruteListen(){
-	if (keys.empty()) goto VectorListen;
-	for (KeyListener& key : keys) {
-		key.update(window);
-	}
+//SET FUNCTIONS
+#pragma region Set Functions
 
-VectorListen:
-	if (bind4Keys.empty()) goto ScalarListen;
-	for (Binding4& bKey : bind4Keys) {
-		bKey.update(window);
-	}
+void SpInput::setBoundKeySize(int size) {
+	keys.resize(size);
+}
 
-ScalarListen:
-	if (bind2Keys.empty()) return;
-	for (Binding2& scalKey : bind2Keys) {
-		scalKey.update(window);
-	}
+void SpInput::setBinding2Size(int size) {
+	bind2Keys.resize(size);
+}
+
+void SpInput::setBinding4Size(int size) {
+	bind4Keys.resize(size);
 }
 
 void SpInput::setWindow(GLFWwindow* inWindow){
@@ -177,6 +220,14 @@ void SpInput::setAttendanceInfo(MouseAttendanceInfo* info){
 	attendInfo = info;
 }
 
+void SpInput::setMouseButtonsInfo(MouseInputs* info){
+	mouseBtnInfo = info;
+}
+#pragma endregion
+
+//GET FUNCTIONS
+#pragma region Get Functions
+
 glm::vec2 SpInput::getMouseDelta(){
 	return posInfo->delta;
 }
@@ -185,6 +236,14 @@ glm::vec2 SpInput::getMousePosition(){
 	return posInfo->position;
 }
 
+MouseButton SpInput::getMouseButtonInfo(int button){
+	return *mouseBtnInfo->all[button];
+}
+
+#pragma endregion
+
+//DEBUG
+
 void SpInput::debugMouseInfo(){
 	string message = "Mouse Position: " + SpDebug::vec2ToStr(posInfo->position) + ". Old Mouse Position: " + SpDebug::vec2ToStr(posInfo->lastPos) + ". Mouse Delta: " + SpDebug::vec2ToStr(posInfo->delta) + ". First Mouse: " + std::to_string(attendInfo->firstMouse) + ". Mouse Entered: " + std::to_string(attendInfo->entered) + ".\n";
 
@@ -192,4 +251,5 @@ void SpInput::debugMouseInfo(){
 	SpConsole::consoleWrite(SP_MESSAGE_INFO, message);
 }
 
+#pragma endregion
 

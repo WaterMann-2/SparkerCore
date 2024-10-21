@@ -28,6 +28,7 @@
 #include "sp_Window.h"
 #include "sp_Utility.h"
 #include "sp_Primitive.h"
+#include "Camera.h"
 
 using std::uint32_t;
 using std::string;
@@ -43,7 +44,7 @@ const bool enableValidationLayers = false;
 #endif // !_DEBUG
 
 
-#define debugCallback sp_Debug::VkDebugCallback
+#define debugCallback SpDebug::VkDebugCallback
 
 const vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
@@ -64,7 +65,8 @@ const std::vector<uint32_t> indices = {
 	3, 2, 6, 6, 7, 3,
 	0, 3, 4, 4, 3, 7,
 	5, 4, 6, 4, 7, 6, 
-	1, 5, 2, 2, 5, 6
+	1, 5, 2, 2, 5, 6,
+	0, 4, 5, 5, 1, 0
 };
 
 const int MAX_FRAMES_IN_FLIGHT = 3;
@@ -72,6 +74,8 @@ const int MAX_FRAMES_IN_FLIGHT = 3;
 class sp_Vulkan{
 
 public:
+
+	Camera* cam;
 
 	void vulkanStart(SpWindow iWindow);
 	void vulkanCleanup();

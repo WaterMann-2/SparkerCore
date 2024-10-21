@@ -18,6 +18,7 @@ void SpWindow::setInput(SpInput* input){
 
 	mainInput->setPosInfo(&posInfo);
 	mainInput->setAttendanceInfo(&attendInfo);
+	mainInput->setMouseButtonsInfo(&mouseBtnInfo);
 }
 
 SpWindow::operator GLFWwindow* () {
@@ -38,6 +39,7 @@ bool SpWindow::newWindow(std::string windowName){
 	
 	glfwSetCursorPosCallback(window, MouseDeltaCallback);
 	glfwSetCursorEnterCallback(window, MouseEnteredCallback);
+	glfwSetMouseButtonCallback(window, MouseButtonCallback);
 
 	return window;
 }
@@ -68,6 +70,10 @@ void SpWindow::enableMouse(bool status){
 
 }
 
+bool SpWindow::mouseover(){
+	return attendInfo.entered;
+}
+
 
 void SpWindow::endFrame() {
 	glfwPollEvents();
@@ -77,6 +83,8 @@ void SpWindow::endFrame() {
 
 	calcMousedelta();
 
+	mouseBtnInfo.endFrame();
+	//SpConsole::consoleWrite(SP_MESSAGE_INFO, "FRAME ENDED!");
 }
 
 void SpWindow::end() {
@@ -95,6 +103,7 @@ void SpWindow::framebufferResizeCallback(GLFWwindow* window, int width, int heig
 	SpWindow* Window = reinterpret_cast<SpWindow*>(glfwGetWindowUserPointer(window));
 	Window->framebufferResized = true;
 }
+
 
 void SpWindow::MouseDeltaCallback(GLFWwindow* window, double xpos, double ypos) {
 	SpWindow* Window = reinterpret_cast<SpWindow*>(glfwGetWindowUserPointer(window));
@@ -127,6 +136,27 @@ void SpWindow::MouseEnteredCallback(GLFWwindow* window, int entered) {
 		return;
 	}
 }
+
+void SpWindow::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods){
+	SpWindow* Window = reinterpret_cast<SpWindow*>(glfwGetWindowUserPointer(window));
+	
+	if (button > 4) {
+		SpConsole::consoleWrite(SP_MESSAGE_ERROR, "Mouse button requested is above max of 4 (AKA mouse button 5)");
+		return;
+	}
+	MouseButton& active = *Window->mouseBtnInfo.all[button];
+
+	if (action == GLFW_PRESS && !active.pressed) {
+		active.pressed = true;
+		active.down = true;
+	}
+	
+	if (action == GLFW_RELEASE) {
+		active.pressed = false;
+		active.up = true;
+	}
+}
+
 
 void SpWindow::calcMousedelta(){
 

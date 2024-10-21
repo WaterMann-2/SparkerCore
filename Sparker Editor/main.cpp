@@ -35,12 +35,8 @@ int main() {
 	
 	vulkan.cam = &cam;
 
-	glm::vec2 localCamPos = cam.transform.position;
-
 	float baseMSens = 5.0f;
 	float movementSensitivity = 5.0f;
-	
-	float mouseSensitivity = 0.0f;
 
 	float sensitivity = 0.01f;
 	//todo
@@ -52,11 +48,26 @@ int main() {
 		movementSensitivity = baseMSens * deltaTime;
 		
 
-		if (mouseToggleBtn->down) window.enableMouse(!window.mouseEnabled());
+		if (mouseToggleBtn->down) {
+			window.enableMouse(false);
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+
+		/*
+		string message = "M1 Down: " + std::to_string(mainInput.getMouseButtonInfo(0).down) + ". M1 Hold: " + 
+			std::to_string(mainInput.getMouseButtonInfo(0).pressed) + ". M1 Up: " + std::to_string(mainInput.getMouseButtonInfo(0).up);*/
+
+		//SpConsole::consoleWrite(SP_MESSAGE_INFO, message);
+
+		if (window.mouseover() && mainInput.getMouseButtonInfo(GLFW_MOUSE_BUTTON_1).pressed) {
+			window.enableMouse(true);
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		}
 
 		if (window.mouseEnabled()) {
 			cam.transform.rotation.z -= sensitivity * mainInput.getMouseDelta().x;
-			cam.transform.rotation.x -= sensitivity * mainInput.getMouseDelta().y;
+			cam.transform.rotation.x += sensitivity * mainInput.getMouseDelta().y;
 		}
 
 		cam.transform.position += (movementSensitivity * moveDir->y) * cam.getFront() - (movementSensitivity * moveDir->x) * cam.getRight();
