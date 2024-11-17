@@ -8,34 +8,33 @@
 #include <glm/glm.hpp>
 
 #include "sp_Debug.h"
+#include "Input.h"
 
-class sp_Window{
+class SpWindow{
 	
 public:
-	bool getFramebufferResized() {
-		if (framebufferResized) {
-			framebufferResized = false;
-			return true;
-		}
-		return false;
-	}
-
-	void destroy();
+	operator GLFWwindow* ();
 	
-	operator GLFWwindow* () {
-		return window;
-	}
 
 	bool newWindow(std::string windowName);
 
-	GLFWwindow* getGLWindow();
-
-	void endFrame() {
-		glfwPollEvents();
-	}
+	void endFrame();
 	
 	static void end();
+	void destroy();
 
+	void setInput(SpInput* input);
+
+	glm::ivec2 getDimensions();
+	bool getFramebufferResized();
+	float getDeltaTime();
+	GLFWwindow* getGLWindow();
+
+	bool mouseEnabled();
+	void enableMouse(bool status);
+
+	bool mouseover();
+	
 
 private:
 	GLFWwindow* window;
@@ -45,6 +44,24 @@ private:
 
 	bool framebufferResized = false;
 
+	float frameTime = 0.0f;
+	float lastFrame = 0.0f;
+
+	SpInput* mainInput;
+
+	bool mouseCallbackCalled = false;
+	MousePosInfo posInfo;
+	MouseAttendanceInfo attendInfo;
+
+	MouseInputs mouseBtnInfo;
+
+
 	static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+	static void MouseDeltaCallback(GLFWwindow* window, double xpos, double ypos);
+	static void MouseEnteredCallback(GLFWwindow* window, int entered);
+	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+
+	void calcMousedelta();
+
 };
 

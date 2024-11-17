@@ -52,6 +52,24 @@
     <Filter Include="Source Files\Model">
       <UniqueIdentifier>{13a068a5-0e6e-452d-9f8a-d778ca23e992}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Component">
+      <UniqueIdentifier>{2ecb9d3b-6864-413e-8c44-3180ded04b9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Model\Object">
+      <UniqueIdentifier>{d5a0344c-877f-4342-a826-38952aa182db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\Object">
+      <UniqueIdentifier>{846777b8-b40f-4170-a262-f949e1a83e32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\User Interaction">
+      <UniqueIdentifier>{7728faee-6d3a-4fa4-8c97-b4928c92de0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\User Interaction">
+      <UniqueIdentifier>{e7ab7708-737c-4246-b3bc-8f0781161482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Component">
+      <UniqueIdentifier>{b9cca97a-1b27-4f72-a000-3206ef622ff1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sp_Enter.cpp">
@@ -78,8 +96,14 @@
     <ClCompile Include="sp_Primitive.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="sp_Vulkan_Init.cpp">
-      <Filter>Source Files\vulkan</Filter>
+    <ClCompile Include="sp_Mesh.cpp">
+      <Filter>Source Files\Model\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\User Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,8 +146,17 @@
     <ClInclude Include="sp_Primitive.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="sp_Vulkan_Init.h">
-      <Filter>Header Files\vulkan</Filter>
+    <ClInclude Include="sp_Mesh.h">
+      <Filter>Header Files\Model\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files\User Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

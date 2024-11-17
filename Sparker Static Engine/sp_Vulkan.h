@@ -1,7 +1,5 @@
 #pragma once
 
-#include "sp_Vulkan_Init.h"
-
 #include <iostream>
 #include <vector>
 #include <cstdint>
@@ -30,6 +28,7 @@
 #include "sp_Window.h"
 #include "sp_Utility.h"
 #include "sp_Primitive.h"
+#include "Camera.h"
 
 using std::uint32_t;
 using std::string;
@@ -45,43 +44,46 @@ const bool enableValidationLayers = false;
 #endif // !_DEBUG
 
 
-#define debugCallback sp_Debug::VkDebugCallback
+#define debugCallback SpDebug::VkDebugCallback
 
-//const vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+const vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
 const vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 const std::vector<Vertex> vertices = {
-    {{-0.5f, 0.5f, -0.5f}, {0.5f, 0.5f, 0.0f}},
-    {{0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-    {{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
-    {{-0.5f, 0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-	{{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, 0.0f}},
-	{{0.5f, -0.5f, -0.5f}, {0.5f, 0.0f, 0.5f}},
-	{{0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-	{{-0.5f, -0.5f, 0.5f}, {0.0f, 0.5f, 0.5f}}
+	{{-0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0, 0}},
+    {{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 0.0f}, {0, 0}},
+    {{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0, 0}},
+    {{-0.5f, 0.5f, 0.5f}, {0.0f, 1.0f, 1.0f}, {0, 0}},
+	{{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, 0.0f}, {0, 0}},
+	{{0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0, 0}},
+	{{0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 1.0f}, {0, 0}},
+	{{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0, 0}}
 };
-const std::vector<uint16_t> indices = {
+const std::vector<uint32_t> indices = {
 	0, 1, 2, 2, 3, 0,
 	3, 2, 6, 6, 7, 3,
 	0, 3, 4, 4, 3, 7,
 	5, 4, 6, 4, 7, 6, 
-	1, 5, 2, 2, 5, 6
+	1, 5, 2, 2, 5, 6,
+	0, 4, 5, 5, 1, 0
 };
 
-const int MAX_FRAMES_IN_FLIGHT = 2;
+const int MAX_FRAMES_IN_FLIGHT = 3;
 
 class sp_Vulkan{
 
 public:
 
-	void vulkanStart(sp_Window iWindow);
+	Camera* cam;
+
+	void vulkanStart(SpWindow iWindow);
 	void vulkanCleanup();
 
 	void drawFrame();
 
 private:
-	sp_Window window;
+	SpWindow window;
 	GLFWwindow* glWindow;
 
 	uint32_t extensionCount = 0;
@@ -96,7 +98,7 @@ private:
 	VkQueue presentQueue;
 	VkSurfaceKHR surface;
 
-	VkSwapchainKHR swapchain;
+	VkSwapchainKHR Swapchain;
 	vector<VkImage> swapchainImages;
 	VkFormat swapchainImageFormat;
 	VkExtent2D swapchainExtent;
@@ -216,3 +218,39 @@ private:
 
 };
 
+
+namespace _sp_Vulkan {
+
+	class Swapchain {
+	public:
+
+	public:
+		VkSwapchainKHR* createSwapchain(VkDevice& srcDevice, VkPhysicalDevice& srcPhysicalDevice, VkSurfaceKHR& srcSurface, GLFWwindow*& window);
+
+		void recreateSwapchain(VkDevice& srcDevice, VkPhysicalDevice& srcPhysicalDevice, VkSurfaceKHR& srcSurface);
+
+	private:
+		bool hasBeenCreated = false;
+
+		VkDevice* device;
+		VkPhysicalDevice* physicalDevice;
+		VkSurfaceKHR* surface;
+		GLFWwindow* window;
+
+		SwapchainSupportDetails pSwapSupport;
+		VkSurfaceFormatKHR pSurfaceFormat;
+		VkPresentModeKHR pPresentMode;
+		VkExtent2D pExtent;
+
+		VkSwapchainKHR swapchain;
+		vector<VkImage> swapchainImages;
+
+		SwapchainSupportDetails querySwapchainSupport(VkPhysicalDevice& physDevice);
+		
+		VkSurfaceFormatKHR chooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR>& availableFormats);
+
+		VkPresentModeKHR chooseSwapPresentMode(const vector<VkPresentModeKHR>& availablePresentModes);
+		VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice& physDevice);
+	};
+}

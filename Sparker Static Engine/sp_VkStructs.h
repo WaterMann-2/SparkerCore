@@ -4,8 +4,6 @@
 #include <optional>
 #include <set>
 
-#include <glm/mat4x4.hpp>
-
 using std::optional;
 using std::uint32_t;
 using std::vector;
@@ -21,10 +19,16 @@ struct QueueFamilyIndices {
 	}
 };
 
-struct SwapchainSupportDetails {
+struct SwapchainSupportDetails  {
 	VkSurfaceCapabilitiesKHR capabilities;
 	vector<VkSurfaceFormatKHR> formats;
 	vector <VkPresentModeKHR> presentModes;
+};
+
+struct UniformBufferObject {
+	alignas(16) glm::mat4 model;
+	alignas(16) glm::mat4 view;
+	alignas(16) glm::mat4 proj;
 };
 
 enum counting {
@@ -32,10 +36,4 @@ enum counting {
 	one, 
 	two, 
 	three
-};
-
-struct UniformBufferObject {
-	alignas(16) glm::mat4 model;
-	alignas(16) glm::mat4 view;
-	alignas(16) glm::mat4 proj;
 };

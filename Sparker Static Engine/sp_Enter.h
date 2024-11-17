@@ -14,6 +14,6 @@ class sp_Enter{
 
 public: 
 
-	sp_Enter(sp_EnterInfo& info, sp_Vulkan& vulkan, sp_Window& window);
+	sp_Enter(sp_EnterInfo& info, sp_Vulkan& vulkan, SpWindow& window, SpInput& input);
 };
 
