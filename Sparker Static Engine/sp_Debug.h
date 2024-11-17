@@ -2,10 +2,15 @@
 #define SP_DEBUG_H
 
 #ifdef _DEBUG
-	#define DCout(severity, message)  SpConsole::consoleWrite(severity, message)
+	#define DCout(severity, message)  sp_Console::consoleWrite(severity, message)
 #else
 	#define DCout(severity, message) do {} while(false)
+	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram, exitCode)
+	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram)
+	#define FatalExit(condition, failMessage, failCode)
 #endif
+
+
 
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -53,10 +58,6 @@ class SpConsole {
 public:
 
 	static void consoleWrite(uint8_t severity, string message);
-	static void vkResultCheck(uint8_t severity, VkResult result, string successMessage, string failMessage);
-	static void vkResultCheck(uint8_t severity, VkResult result, string successMessage, string failMessage, int exitCode);
-
-	static void fatalExit(bool condition, string extMessage, int exitCode);
 };
 
 struct sp_ErrorLocation {

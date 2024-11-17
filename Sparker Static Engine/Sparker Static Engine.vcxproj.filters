@@ -96,15 +96,6 @@
     <ClCompile Include="sp_Primitive.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="sp_Mesh.cpp">
-      <Filter>Source Files\Model\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Source Files\User Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Component</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sparker Engine.h">
@@ -145,18 +136,6 @@
     </ClInclude>
     <ClInclude Include="sp_Primitive.h">
       <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="sp_Mesh.h">
-      <Filter>Header Files\Model\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Header Files\User Interaction</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
