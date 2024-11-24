@@ -21,12 +21,14 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="sp_Gui.cpp" />
     <ClCompile Include="sp_Mesh.cpp" />
     <ClCompile Include="sp_Assert.cpp" />
     <ClCompile Include="sp_Debug.cpp" />
     <ClCompile Include="sp_Enter.cpp" />
     <ClCompile Include="sp_Exit.cpp" />
     <ClCompile Include="sp_Primitive.cpp" />
+    <ClCompile Include="sp_Renderer_Vulkan.cpp" />
     <ClCompile Include="sp_Utility.cpp" />
     <ClCompile Include="sp_Vulkan.cpp" />
     <ClCompile Include="sp_Vulkan_Init.cpp" />
@@ -34,7 +36,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="sp_Renderer_Vulkan.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="sp_Gui.h" />
     <ClInclude Include="sp_Mesh.h" />
     <ClInclude Include="sp_ExitInfo.h" />
     <ClInclude Include="Sparker Engine.h" />

@@ -25,6 +25,10 @@
 
 #include "sp_Severity.h"
 
+
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
 #include <vulkan/vk_platform.h>
 #include <vulkan/vulkan_core.h>
 
@@ -35,6 +39,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 using std::string;
+using std::vector;
 
 using std::cout;
 using std::endl;
@@ -57,7 +62,16 @@ class SpConsole {
 
 public:
 
-	static void consoleWrite(uint8_t severity, string message);
+	static void consoleWrite(SpMessage severity, string message);
+	static void vkResultCheck(SpMessage severity, VkResult result, string successMessage, string failMessage);
+	static void vkResultCheck(SpMessage severity, VkResult result, string successMessage, string failMessage, int exitCode);
+
+	static void vkResultExitCheck(VkResult result, string failMessage, SpExitCode exitCode);
+	static void vkResultExitCheck(VkResult result, string failMessage, string successMessage, SpExitCode exitCode);
+	
+
+	static void fatalExit(bool condition, string exitMessage, int exitCode);
+	static void fatalExit(string exitMessage, int exitCode);
 };
 
 struct sp_ErrorLocation {

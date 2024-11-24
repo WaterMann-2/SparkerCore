@@ -29,6 +29,7 @@
 #include "sp_Utility.h"
 #include "sp_Primitive.h"
 #include "Camera.h"
+#include "sp_Renderer_Vulkan.h"
 
 using std::uint32_t;
 using std::string;

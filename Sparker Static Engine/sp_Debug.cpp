@@ -1,6 +1,6 @@
 #include "sp_Debug.h"
 
-void SpConsole::consoleWrite(uint8_t severity, string message){
+void SpConsole::consoleWrite(SpMessage severity, string message){
 	switch (severity) {
 	case SP_MESSAGE_INFO:
 		cout << "[INFO] " << message << endl;
@@ -22,7 +22,7 @@ void SpConsole::consoleWrite(uint8_t severity, string message){
 	}
 }
 
-void SpConsole::vkResultCheck(uint8_t severity, VkResult result, string successMessage, string failMessage){
+void SpConsole::vkResultCheck(SpMessage severity, VkResult result, string successMessage, string failMessage){
 	if (result == VK_SUCCESS) {
 		consoleWrite(SP_MESSAGE_INFO, successMessage);
 		return;
@@ -32,7 +32,7 @@ void SpConsole::vkResultCheck(uint8_t severity, VkResult result, string successM
 	consoleWrite(severity, "Vulkan Code: " + std::to_string(result));
 }
 
-void SpConsole::vkResultCheck(uint8_t severity, VkResult result, string successMessage, string failMessage, int exitCode) {
+void SpConsole::vkResultCheck(SpMessage severity, VkResult result, string successMessage, string failMessage, int exitCode) {
 	if (result == VK_SUCCESS) {
 		consoleWrite(SP_MESSAGE_INFO, successMessage);
 		return;
@@ -40,6 +40,27 @@ void SpConsole::vkResultCheck(uint8_t severity, VkResult result, string successM
 
 	consoleWrite(severity, failMessage);
 	consoleWrite(severity, "Vulkan Code: " + std::to_string(result));
+	std::exit(exitCode);
+}
+
+void SpConsole::vkResultExitCheck(VkResult result, string failMessage, SpExitCode exitCode){
+	if (result == VK_SUCCESS) {
+		return;
+	}
+
+	consoleWrite(SP_MESSAGE_FATAL, failMessage);
+	consoleWrite(SP_MESSAGE_FATAL, "Vulkan Code: " + std::to_string(result));
+	std::exit(exitCode);
+}
+
+void SpConsole::vkResultExitCheck(VkResult result, string failMessage, string successMessage, SpExitCode exitCode){
+	if (result == VK_SUCCESS) {
+		consoleWrite(SP_MESSAGE_INFO, successMessage);
+		return;
+	}
+
+	consoleWrite(SP_MESSAGE_FATAL, failMessage);
+	consoleWrite(SP_MESSAGE_FATAL, "Vulkan Code: " + std::to_string(result));
 	std::exit(exitCode);
 }
 
@@ -52,11 +73,24 @@ void SpConsole::fatalExit(bool condition, string exitMessage, int exitCode){
 	std::exit(exitCode);
 }
 
+void SpConsole::fatalExit(string exitMessage, int exitCode){
+	consoleWrite(SP_MESSAGE_FATAL, exitMessage);
+	std::exit(exitCode);
+}
+
 
 VKAPI_ATTR VkBool32 VKAPI_CALL SpDebug::VkDebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData){
 
-	std::cerr << "Validation layer: " << pCallbackData->pMessage << endl;
-	if (messageSeverity >= SP_VK_WARNING) {
+	switch (messageSeverity) {
+	case SP_VK_VERBOSE:
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, string("[VULKAN] ") + pCallbackData->pMessage);
+		break;
+	case SP_VK_WARNING:
+		SpConsole::consoleWrite(SP_MESSAGE_WARNING, string("[VULKAN] ") + pCallbackData->pMessage);
+		break;
+	case SP_VK_ERROR:
+		SpConsole::consoleWrite(SP_MESSAGE_ERROR, string("[VULKAN] ") + pCallbackData->pMessage);
+		break;
 	}
 	
 
