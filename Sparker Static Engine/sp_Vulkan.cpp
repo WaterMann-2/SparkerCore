@@ -5,9 +5,12 @@ void sp_Vulkan::vulkanStart(SpWindow srcWindow) {
 	window = srcWindow;
 	glWindow = window.getGLWindow();
 
-	createInstance();
-	setupDebugMessenger();
-	createSurface();
+	//createInstance();
+	//setupDebugMessenger();
+	//createSurface();
+	Sparker_Engine::Renderer::sp_Vulkan2::CreateInstance(instance, nullptr, nullptr);
+	Sparker_Engine::Renderer::sp_Vulkan2::SetupDebugMessenger(instance, debugMessenger);
+	Sparker_Engine::Renderer::sp_Vulkan2::CreateSurface(instance, surface, window);
 	pickPhysicalDevice();
 	createLogicalDevice();
 	createSwapchain();
