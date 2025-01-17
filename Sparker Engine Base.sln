@@ -7,7 +7,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparker Editor", "Sparker E
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparker Engine", "Sparker Static Engine\Sparker Static Engine.vcxproj", "{51628BE4-9A15-4966-8D44-A971B893478E}"
 EndProject
+<<<<<<< Updated upstream
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparker Renderer", "Sparker Vulkan Renderer\Sparker Vulkan Renderer.vcxproj", "{759F8E56-EB9C-49F4-B9DA-E6A8EA926870}"
+=======
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Renderer\Renderer.vcxproj", "{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer Tester", "Renderer Tester\Renderer Tester.vcxproj", "{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparker Debugger", "Sparker Debugger\Sparker Debugger.vcxproj", "{EF53FA8D-725F-4B33-AB8E-E8779721E30E}"
+>>>>>>> Stashed changes
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +41,7 @@ Global
 		{51628BE4-9A15-4966-8D44-A971B893478E}.Release|x64.Build.0 = Release|x64
 		{51628BE4-9A15-4966-8D44-A971B893478E}.Release|x86.ActiveCfg = Release|Win32
 		{51628BE4-9A15-4966-8D44-A971B893478E}.Release|x86.Build.0 = Release|Win32
+<<<<<<< Updated upstream
 		{759F8E56-EB9C-49F4-B9DA-E6A8EA926870}.Debug|x64.ActiveCfg = Debug|x64
 		{759F8E56-EB9C-49F4-B9DA-E6A8EA926870}.Debug|x64.Build.0 = Debug|x64
 		{759F8E56-EB9C-49F4-B9DA-E6A8EA926870}.Debug|x86.ActiveCfg = Debug|Win32
@@ -41,6 +50,32 @@ Global
 		{759F8E56-EB9C-49F4-B9DA-E6A8EA926870}.Release|x64.Build.0 = Release|x64
 		{759F8E56-EB9C-49F4-B9DA-E6A8EA926870}.Release|x86.ActiveCfg = Release|Win32
 		{759F8E56-EB9C-49F4-B9DA-E6A8EA926870}.Release|x86.Build.0 = Release|Win32
+=======
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Debug|x64.ActiveCfg = Debug|x64
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Debug|x64.Build.0 = Debug|x64
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Debug|x86.ActiveCfg = Debug|Win32
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Debug|x86.Build.0 = Debug|Win32
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Release|x64.ActiveCfg = Release|x64
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Release|x64.Build.0 = Release|x64
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Release|x86.ActiveCfg = Release|Win32
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Release|x86.Build.0 = Release|Win32
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Debug|x64.ActiveCfg = Debug|x64
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Debug|x64.Build.0 = Debug|x64
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Debug|x86.ActiveCfg = Debug|Win32
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Debug|x86.Build.0 = Debug|Win32
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Release|x64.ActiveCfg = Release|x64
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Release|x64.Build.0 = Release|x64
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Release|x86.ActiveCfg = Release|Win32
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Release|x86.Build.0 = Release|Win32
+		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Debug|x64.ActiveCfg = Debug|x64
+		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Debug|x64.Build.0 = Debug|x64
+		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Debug|x86.ActiveCfg = Debug|Win32
+		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Debug|x86.Build.0 = Debug|Win32
+		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Release|x64.ActiveCfg = Release|x64
+		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Release|x64.Build.0 = Release|x64
+		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Release|x86.ActiveCfg = Release|Win32
+		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Release|x86.Build.0 = Release|Win32
+>>>>>>> Stashed changes
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
