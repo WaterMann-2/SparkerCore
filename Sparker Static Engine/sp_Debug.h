@@ -48,6 +48,10 @@ using std::set;
 using std::cout;
 using std::endl;
 
+enum ErrorCode {
+	SP_ASSIMP_FLAGS_INCOMPLETE = 510
+};
+
 class SpDebug{
 
 public:

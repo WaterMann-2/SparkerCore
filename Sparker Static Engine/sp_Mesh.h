@@ -5,6 +5,10 @@
 
 #include <vulkan/vulkan.h>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 #include "sp_Debug.h"
 #include "sp_VkStructs.h"
 #include "sp_Primitive.h"
@@ -25,6 +29,14 @@ namespace sp_Primitive {
 		vector<uint32_t> indices;
 		VkBuffer vertexBuffer;
 		VkDeviceMemory vertexBufferMemory;
+
+
+		void loadModel();
+
+		
+		void loadModel(string path);
+
+		void processNode(aiNode* node, const aiScene* scene);
 
 
 	};
