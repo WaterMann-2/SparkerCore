@@ -7,7 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparker Editor", "Sparker E
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparker Engine", "Sparker Static Engine\Sparker Static Engine.vcxproj", "{51628BE4-9A15-4966-8D44-A971B893478E}"
 EndProject
+<<<<<<< HEAD
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparker Debugger", "Sparker Debugger\Sparker Debugger.vcxproj", "{EF53FA8D-725F-4B33-AB8E-E8779721E30E}"
+=======
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Renderer\Renderer.vcxproj", "{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer Tester", "Renderer Tester\Renderer Tester.vcxproj", "{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}"
+>>>>>>> 1c1d6a1a92c327233c577f7d27a8ce68713294f8
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,7 @@ Global
 		{51628BE4-9A15-4966-8D44-A971B893478E}.Release|x64.Build.0 = Release|x64
 		{51628BE4-9A15-4966-8D44-A971B893478E}.Release|x86.ActiveCfg = Release|Win32
 		{51628BE4-9A15-4966-8D44-A971B893478E}.Release|x86.Build.0 = Release|Win32
+<<<<<<< HEAD
 		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Debug|x64.ActiveCfg = Debug|x64
 		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Debug|x64.Build.0 = Debug|x64
 		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Debug|x86.ActiveCfg = Debug|Win32
@@ -41,6 +48,24 @@ Global
 		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Release|x64.Build.0 = Release|x64
 		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Release|x86.ActiveCfg = Release|Win32
 		{EF53FA8D-725F-4B33-AB8E-E8779721E30E}.Release|x86.Build.0 = Release|Win32
+=======
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Debug|x64.ActiveCfg = Debug|x64
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Debug|x64.Build.0 = Debug|x64
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Debug|x86.ActiveCfg = Debug|Win32
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Debug|x86.Build.0 = Debug|Win32
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Release|x64.ActiveCfg = Release|x64
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Release|x64.Build.0 = Release|x64
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Release|x86.ActiveCfg = Release|Win32
+		{AEDA92F8-A8F4-4330-A84D-FB52FFDF351F}.Release|x86.Build.0 = Release|Win32
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Debug|x64.ActiveCfg = Debug|x64
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Debug|x64.Build.0 = Debug|x64
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Debug|x86.ActiveCfg = Debug|Win32
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Debug|x86.Build.0 = Debug|Win32
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Release|x64.ActiveCfg = Release|x64
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Release|x64.Build.0 = Release|x64
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Release|x86.ActiveCfg = Release|Win32
+		{AA2B4815-F826-418A-AA2B-F0CB76A9FA7B}.Release|x86.Build.0 = Release|Win32
+>>>>>>> 1c1d6a1a92c327233c577f7d27a8ce68713294f8
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
