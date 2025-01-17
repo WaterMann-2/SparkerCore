@@ -111,14 +111,11 @@
     <ClCompile Include="sp_Mesh.cpp">
       <Filter>Source Files\Model\Object</Filter>
     </ClCompile>
+    <ClCompile Include="sp_Vulkan_Init.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="sp_Gui.cpp">
       <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="sp_Renderer_Vulkan.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sp_Queue_Families.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,17 +167,14 @@
     <ClInclude Include="sp_Mesh.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
+    <ClInclude Include="sp_Vulkan_Init.h">
+      <Filter>Header Files\vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Header Files\Component</Filter>
     </ClInclude>
     <ClInclude Include="sp_Gui.h">
       <Filter>Header Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="sp_Renderer_Vulkan.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sp_Queue_Families.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
