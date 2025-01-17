@@ -5,7 +5,7 @@
 
 
 int main() {
-	SpConsole::consoleWrite(SP_MESSAGE_INFO, "Program started!");
+	//SpConsole::consoleWrite(SP_MESSAGE_INFO, "Program started!");
 	SpWindow window;
 	sp_Vulkan vulkan;
 	sp_EnterInfo enterInfo;
