@@ -17,10 +17,13 @@ enum SpExitCode {
 
 	Sp_Exit_ValidationLayersUnavailable = 50,
 	Sp_Exit_DebugMessengerPtrNotProvided = 51,
-	Sp_Exit_DebugMessengerFailedToCreate = 52,
+	SP_EXIT_FAILED_TO_CREATE_DEBUG_MESSENGER = 52,
 	Sp_Exit_InstancePtrNotProvided = 100,
-	Sp_Exit_InstanceFailedToCreate = 101,
-	Sp_Exit_SurfaceFailedToCreate = 105
+	SP_EXIT_FAILED_TO_CREATE_INSTANCE = 101,
+	SP_EXIT_FAILED_TO_CREATE_WINDOW_SURFACE = 105,
+	Sp_Exit_FailedToCreateImage = 500,
+	Sp_Exit_FailedToAllocateImageMemory = 501,
+	Sp_Exit_FailedToCreateImageView = 110
 };
 
 enum SpMessage {

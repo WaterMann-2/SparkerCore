@@ -44,6 +44,7 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		mainInput.bruteListen();
 		float deltaTime = window.getDeltaTime();
+
 		baseMSens += *speed * deltaTime;
 		movementSensitivity = baseMSens * deltaTime;
 		

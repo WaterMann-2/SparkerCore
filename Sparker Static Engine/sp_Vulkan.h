@@ -30,6 +30,7 @@
 #include "sp_Primitive.h"
 #include "Camera.h"
 #include "sp_Renderer_Vulkan.h"
+#include "sp_Gui.h"
 
 using std::uint32_t;
 using std::string;
@@ -59,7 +60,17 @@ const std::vector<Vertex> vertices = {
 	{{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, 0.0f}, {0, 0}},
 	{{0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0, 0}},
 	{{0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 1.0f}, {0, 0}},
-	{{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0, 0}}
+	{{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0, 0}},
+	
+	{{4.5f, 1.5f, 4.5f}, {0.0f, 1.0f, 0.0f}, {0, 0}},
+    {{5.5f, 1.5f, 4.5f}, {1.0f, 1.0f, 0.0f}, {0, 0}},
+    {{5.5f, 1.5f, 5.5f}, {1.0f, 1.0f, 1.0f}, {0, 0}},
+    {{4.5f, 1.5f, 5.5f}, {0.0f, 1.0f, 1.0f}, {0, 0}},
+	{{4.5f, 0.5f, 4.5f}, {0.0f, 0.0f, 0.0f}, {0, 0}},
+	{{5.5f, 0.5f, 4.5f}, {1.0f, 0.0f, 0.0f}, {0, 0}},
+	{{5.5f, 0.5f, 5.5f}, {1.0f, 0.0f, 1.0f}, {0, 0}},
+	{{4.5f, 0.5f, 5.5f}, {0.0f, 0.0f, 1.0f}, {0, 0}},
+
 };
 const std::vector<uint32_t> indices = {
 	0, 1, 2, 2, 3, 0,
@@ -67,7 +78,16 @@ const std::vector<uint32_t> indices = {
 	0, 3, 4, 4, 3, 7,
 	5, 4, 6, 4, 7, 6, 
 	1, 5, 2, 2, 5, 6,
-	0, 4, 5, 5, 1, 0
+	0, 4, 5, 5, 1, 0,
+	
+	8, 9, 10, 10, 11, 8,
+	11, 10, 14, 14, 15, 11,
+	8, 11, 12, 12, 11, 15,
+	13, 12, 14, 12, 15, 14, 
+	9, 13, 10, 10, 13, 14,
+	8, 12, 13, 13, 9, 8
+
+	
 };
 
 const int MAX_FRAMES_IN_FLIGHT = 3;
@@ -82,6 +102,11 @@ public:
 	void vulkanCleanup();
 
 	void drawFrame();
+
+	//Imgui
+
+	void ImGuiStart();
+	void ImGuiUpdate();
 
 private:
 	SpWindow window;
@@ -133,6 +158,10 @@ private:
 	vector<VkDeviceMemory> uniformBuffersMemory;
 	vector<void*> uniformBuffersMapped;
 
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
+
 
 	//Startup
 
@@ -178,6 +207,7 @@ private:
 	//Image Views
 
 	void createImageViews();
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
 	inline void destroyImageViews();
 
 	//Graphics pipeline
@@ -216,7 +246,15 @@ private:
 
 	void createTextureImage();
 
+	void createDepthResources();
+	VkFormat findDepthFormat();
+	VkFormat findSupportedFormat(const std::vector<VkFormat>& canidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
+
+	static bool hasStensilComponent(VkFormat format) {
+		return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
+	}
 };
 
 
