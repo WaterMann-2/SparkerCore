@@ -18,6 +18,8 @@
 
 
 #include <iostream>
+#include <optional>
+#include <set>
 #include <string>
 #include <cassert>
 
@@ -40,6 +42,8 @@
 
 using std::string;
 using std::vector;
+using std::optional;
+using std::set;
 
 using std::cout;
 using std::endl;

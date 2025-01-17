@@ -79,6 +79,9 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{cfd0be5e-13f8-45f4-b3b7-d8124e68e4cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Queue Family">
+      <UniqueIdentifier>{a7036a82-9454-48f6-bee2-f0cbef795f45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sp_Enter.cpp">
@@ -119,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="sp_Renderer_Vulkan.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="sp_Queue_Families.cpp">
+      <Filter>Graphics\Queue Family</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="sp_Renderer_Vulkan.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Queue_Families.h">
+      <Filter>Graphics\Queue Family</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

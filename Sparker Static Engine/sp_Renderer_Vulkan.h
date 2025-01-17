@@ -3,6 +3,7 @@
 #include "sp_Debug.h"
 #include "sp_Window.h"
 
+#include "sp_Queue_Families.h"
 
 const bool VALIDATION_LAYERS_ENABLED = true;
 
@@ -26,6 +27,8 @@ namespace Sparker_Engine {
 			static void SetupDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT& debugMesenger);
 
 			static void CreateSurface(VkInstance& instance, VkSurfaceKHR& surface, SpWindow& window);
+
+			//static void CreateLogicalDevice
 
 		private: // Static utility functions
 			inline static bool checkValidationLayerSupport(vector<const char*> requestedLayers);

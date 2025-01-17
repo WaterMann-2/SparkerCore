@@ -2,9 +2,8 @@
 
 void Sparker_Engine::Renderer::sp_Vulkan2::CreateInstance(VkInstance& instance, VkApplicationInfo* appInfo, VkInstanceCreateInfo* createInfo){
 
-  if (instance != nullptr) SpConsole::fatalExit("Instance pointer not provided in \"CreateInstance\"!", Sp_Exit_InstancePtrNotProvided);
 
-	vector<const char*> requiredExtensions = getRequiredextensions();
+	vector<const char*> requestedExtensions = getRequiredextensions();
 
 	bool layerSupport = checkValidationLayerSupport(RequestedLayers);
 	if (VALIDATION_LAYERS_ENABLED && !layerSupport) {
@@ -29,8 +28,8 @@ void Sparker_Engine::Renderer::sp_Vulkan2::CreateInstance(VkInstance& instance, 
 		SpConsole::consoleWrite(SP_MESSAGE_WARNING, "Instance create info not provided for VkInstance creation! Using default instead.");
 		CreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		CreateInfo.pApplicationInfo = &AppInfo;
-		CreateInfo.enabledExtensionCount = static_cast<uint32_t>(requiredExtensions.size());
-		CreateInfo.ppEnabledExtensionNames = requiredExtensions.data();
+		CreateInfo.enabledExtensionCount = static_cast<uint32_t>(requestedExtensions.size());
+		CreateInfo.ppEnabledExtensionNames = requestedExtensions.data();
 
 		if (VALIDATION_LAYERS_ENABLED) {
 			CreateInfo.enabledLayerCount = static_cast<uint32_t>(RequestedLayers.size());
@@ -54,21 +53,11 @@ void Sparker_Engine::Renderer::sp_Vulkan2::CreateInstance(VkInstance& instance, 
 
 	VkResult result = vkCreateInstance(&CreateInfo, nullptr, &instance);
 
-	SpConsole::vkResultCheck(SP_MESSAGE_FATAL, result, "Created Vulkan instance.", "Failed to create vulkan instance!", Sp_Exit_InstanceFailedToCreate);
+	SpConsole::vkResultCheck(SP_MESSAGE_FATAL, result, "Created Vulkan instance.", "Failed to create vulkan instance!", SP_EXIT_FAILED_TO_CREATE_INSTANCE);
 }
 
 void Sparker_Engine::Renderer::sp_Vulkan2::SetupDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT& debugMesenger){
-	/*
-	//TODO Assertion
-	if (instance == nullptr) {
-		SpConsole::fatalExit("Instance pointer not provided for debug messenger creation!", Sp_Exit_InstancePtrNotProvided);
-	}
-	//TODO Assertion
-	if (debugMesenger == nullptr) {
-		SpConsole::fatalExit("Debug messenger pointer not provided for debug messenger creation!", Sp_Exit_DebugMessengerPtrNotProvided);
-	}*/
 
-	
 	debugMesenger = {};
 	
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = populateDebugMessenger();
@@ -80,14 +69,14 @@ void Sparker_Engine::Renderer::sp_Vulkan2::SetupDebugMessenger(VkInstance instan
 		debugCreateResult = func(instance, &createInfo, nullptr, &debugMesenger);
 	}
 
-	SpConsole::vkResultCheck(SP_MESSAGE_FATAL, debugCreateResult, "Created Debug Messenger.", "Failed to create Debug Messenger!", Sp_Exit_DebugMessengerFailedToCreate);
+	SpConsole::vkResultCheck(SP_MESSAGE_FATAL, debugCreateResult, "Created Debug Messenger.", "Failed to create Debug Messenger!", SP_EXIT_FAILED_TO_CREATE_DEBUG_MESSENGER);
 }
 
 void Sparker_Engine::Renderer::sp_Vulkan2::CreateSurface(VkInstance& instance, VkSurfaceKHR& surface, SpWindow& window){
 
 	VkResult surfaceCreateResult = glfwCreateWindowSurface(instance, window, nullptr, &surface);
 
-	SpConsole::vkResultExitCheck(surfaceCreateResult, "Failed to create Window Surface!", "Created Window Surface.", Sp_Exit_SurfaceFailedToCreate);
+	SpConsole::vkResultExitCheck(surfaceCreateResult, "Failed to create Window Surface!", "Created Window Surface.", SP_EXIT_FAILED_TO_CREATE_WINDOW_SURFACE);
 }
 
 //Tools

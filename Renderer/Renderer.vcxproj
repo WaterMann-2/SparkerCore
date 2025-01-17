@@ -19,65 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="sp_Gui.cpp" />
-    <ClCompile Include="sp_Mesh.cpp" />
-    <ClCompile Include="sp_Assert.cpp" />
-    <ClCompile Include="sp_Debug.cpp" />
-    <ClCompile Include="sp_Enter.cpp" />
-    <ClCompile Include="sp_Exit.cpp" />
-    <ClCompile Include="sp_Primitive.cpp" />
-    <ClCompile Include="sp_Queue_Families.cpp" />
-    <ClCompile Include="sp_Renderer_Vulkan.cpp" />
-    <ClCompile Include="sp_Utility.cpp" />
-    <ClCompile Include="sp_Vulkan.cpp" />
-    <ClCompile Include="sp_Vulkan_Init.cpp" />
-    <ClCompile Include="sp_Window.cpp" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="sp_Queue_Families.h" />
-    <ClInclude Include="sp_Renderer_Vulkan.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="sp_Gui.h" />
-    <ClInclude Include="sp_Mesh.h" />
-    <ClInclude Include="sp_ExitInfo.h" />
-    <ClInclude Include="Sparker Engine.h" />
-    <ClInclude Include="sp_Assert.h" />
-    <ClInclude Include="sp_Debug.h" />
-    <ClInclude Include="sp_Enter.h" />
-    <ClInclude Include="sp_EnterInfo.h" />
-    <ClInclude Include="sp_Exit.h" />
-    <ClInclude Include="sp_Primitive.h" />
-    <ClInclude Include="sp_Severity.h" />
-    <ClInclude Include="sp_Utility.h" />
-    <ClInclude Include="sp_VkStructs.h" />
-    <ClInclude Include="sp_Vulkan.h" />
-    <ClInclude Include="sp_Vulkan_Init.h" />
-    <ClInclude Include="sp_Window.h" />
-    <ClInclude Include="Transform.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="compileShaders.bat" />
-    <None Include="first.frag" />
-    <None Include="first.vert" />
-    <None Include="frag.spv" />
-    <Media Include="vert.spv">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </Media>
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{51628be4-9a15-4966-8d44-a971b893478e}</ProjectGuid>
-    <RootNamespace>SparkerStaticEngine</RootNamespace>
+    <ProjectGuid>{aeda92f8-a8f4-4330-a84d-fb52ffdf351f}</ProjectGuid>
+    <RootNamespace>Renderer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Sparker Engine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -130,16 +84,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>C:\Visual Studio\Sparker Engine Base\Sparker Debugger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>compileShaders.bat</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -149,7 +102,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>C:\Visual Studio\Sparker Engine Base\Sparker Debugger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -158,9 +113,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>compileShaders.bat</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -168,16 +120,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>C:\Visual Studio\Sparker Engine Base\Sparker Debugger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>compileShaders.bat</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -187,7 +138,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>C:\Visual Studio\Sparker Engine Base\Sparker Debugger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -196,9 +149,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>compileShaders.bat</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
