@@ -70,17 +70,11 @@
     <Filter Include="Source Files\Component">
       <UniqueIdentifier>{b9cca97a-1b27-4f72-a000-3206ef622ff1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GUI">
-      <UniqueIdentifier>{38ed53fb-b875-464a-be88-bc0e531f0f62}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GUI">
-      <UniqueIdentifier>{a7876bd7-2081-4233-a18a-c3a30fa88e73}</UniqueIdentifier>
+      <UniqueIdentifier>{bb0e7796-68ab-44ac-8479-0599b575eb2b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics">
-      <UniqueIdentifier>{cfd0be5e-13f8-45f4-b3b7-d8124e68e4cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Queue Family">
-      <UniqueIdentifier>{a7036a82-9454-48f6-bee2-f0cbef795f45}</UniqueIdentifier>
+    <Filter Include="Header Files\GUI">
+      <UniqueIdentifier>{a8574a7d-32a7-42d7-857b-27827a33c028}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,23 +102,20 @@
     <ClCompile Include="sp_Primitive.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="sp_Mesh.cpp">
-      <Filter>Source Files\Model\Object</Filter>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Component</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\User Interaction</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Component</Filter>
+    <ClCompile Include="sp_Mesh.cpp">
+      <Filter>Source Files\Model\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="sp_Vulkan_Init.cpp">
+      <Filter>Source Files\vulkan</Filter>
     </ClCompile>
     <ClCompile Include="sp_Gui.cpp">
       <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="sp_Renderer_Vulkan.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="sp_Queue_Families.cpp">
-      <Filter>Graphics\Queue Family</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,26 +158,23 @@
     <ClInclude Include="sp_Primitive.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="sp_Mesh.h">
-      <Filter>Header Files\Model\Object</Filter>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Component</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Header Files\User Interaction</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files\Component</Filter>
+    <ClInclude Include="sp_Mesh.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_Vulkan_Init.h">
+      <Filter>Header Files\vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Header Files\Component</Filter>
     </ClInclude>
     <ClInclude Include="sp_Gui.h">
       <Filter>Header Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="sp_Renderer_Vulkan.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="sp_Queue_Families.h">
-      <Filter>Graphics\Queue Family</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

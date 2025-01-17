@@ -1,7 +1,7 @@
 #include "sp_Vulkan.h"
 
 void sp_Vulkan::vulkanStart(SpWindow srcWindow) {
-	DCout(SP_MESSAGE_INFO, "Initalizing Vulkan");
+	SpConsole::consoleWrite(SP_MESSAGE_INFO, "Initalizing Vulkan");
 	window = srcWindow;
 	glWindow = window.getGLWindow();
 
@@ -70,7 +70,7 @@ void sp_Vulkan::drawFrame() {
 		recreateSwapchain();
 		return;
 	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-		DCout(SP_MESSAGE_FATAL, "Failed to aquire swapchain image!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to aquire swapchain image!");
 	}
 
 

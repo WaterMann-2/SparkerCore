@@ -43,7 +43,7 @@ namespace Graphics {
 		private:
 			
 			VkSurfaceFormatKHR chooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR>& availableFormats);
-			VkPresentModeKHR chooseSwapPresentMode(const vector<VkPresentModeKHR)
+			VkPresentModeKHR chooseSwapPresentMode(const vector <VkPresentModeKHR>& avilableFormats);
 
 		};
 	}
