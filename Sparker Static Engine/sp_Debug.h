@@ -1,29 +1,24 @@
 #ifndef SP_DEBUG_H
 #define SP_DEBUG_H
 
-#ifdef _DEBUG
-	#define DCout(severity, message)  sp_Console::consoleWrite(severity, message)
-#else
-	#define DCout(severity, message) do {} while(false)
-	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram, exitCode)
-	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram)
-	#define FatalExit(condition, failMessage, failCode)
-#endif
-
-
-
 
 #define _CRT_SECURE_NO_WARNINGS
 
 
 
 #include <iostream>
+#include <optional>
+#include <set>
 #include <string>
 #include <cassert>
 
 #include <vector>
 
 #include "sp_Severity.h"
+
+
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
 
 #include <vulkan/vk_platform.h>
 #include <vulkan/vulkan_core.h>
@@ -34,12 +29,21 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "sp_VkStructs.h"
+
 using std::string;
+using std::vector;
+using std::optional;
+using std::set;
 
 using std::cout;
 using std::endl;
 
-class SpDebug{
+enum ErrorCode {
+	SP_ASSIMP_FLAGS_INCOMPLETE = 510
+};
+
+class SpDebug {
 
 public:
 
@@ -57,7 +61,16 @@ class SpConsole {
 
 public:
 
-	static void consoleWrite(uint8_t severity, string message);
+	static void consoleWrite(SpMessage severity, string message);
+	static void vkResultCheck(SpMessage severity, VkResult result, string successMessage, string failMessage);
+	static void vkResultCheck(SpMessage severity, VkResult result, string successMessage, string failMessage, int exitCode);
+
+	static void vkResultExitCheck(VkResult result, string failMessage, SpExitCode exitCode);
+	static void vkResultExitCheck(VkResult result, string failMessage, string successMessage, SpExitCode exitCode);
+	
+
+	static void fatalExit(bool condition, string exitMessage, int exitCode);
+	static void fatalExit(string exitMessage, int exitCode);
 };
 
 struct sp_ErrorLocation {

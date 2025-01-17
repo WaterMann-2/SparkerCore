@@ -28,7 +28,7 @@ int main() {
 
 	vec2* moveDir = &movement->dir;
 	float* vert = &vertical->dir;
-	//DCout(SP_MESSAGE_INFO, std::to_string(*vert));
+	//SpConsole::consoleWrite(SP_MESSAGE_INFO, std::to_string(*vert));
 	float* speed = &speedKey->dir;
 
 	Camera cam(glm::vec3(2.0f), glm::vec3(glm::pi<float>() * 6 / 5, 0, glm::pi<float>() / 4), glm::radians(60.0f), glm::ivec2(window.getDimensions()), 0.1f, 100.0f);
@@ -44,6 +44,7 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		mainInput.bruteListen();
 		float deltaTime = window.getDeltaTime();
+
 		baseMSens += *speed * deltaTime;
 		movementSensitivity = baseMSens * deltaTime;
 		

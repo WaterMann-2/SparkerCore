@@ -1,13 +1,16 @@
 #include "sp_Vulkan.h"
 
 void sp_Vulkan::vulkanStart(SpWindow srcWindow) {
-	DCout(SP_MESSAGE_INFO, "Initalizing Vulkan");
+	SpConsole::consoleWrite(SP_MESSAGE_INFO, "Initalizing Vulkan");
 	window = srcWindow;
 	glWindow = window.getGLWindow();
 
-	createInstance();
-	setupDebugMessenger();
-	createSurface();
+	//createInstance();
+	//setupDebugMessenger();
+	//createSurface();
+	Sparker_Engine::Renderer::sp_Vulkan2::CreateInstance(instance, nullptr, nullptr);
+	Sparker_Engine::Renderer::sp_Vulkan2::SetupDebugMessenger(instance, debugMessenger);
+	Sparker_Engine::Renderer::sp_Vulkan2::CreateSurface(instance, surface, window);
 	pickPhysicalDevice();
 	createLogicalDevice();
 	createSwapchain();
@@ -15,6 +18,7 @@ void sp_Vulkan::vulkanStart(SpWindow srcWindow) {
 	createRenderPass();
 	createDescriptorSetLayout();
 	createGraphicsPipeline();
+	createDepthResources();
 	createFramebuffers();
 	createCommandPool();
 	createTextureImage();
@@ -66,7 +70,7 @@ void sp_Vulkan::drawFrame() {
 		recreateSwapchain();
 		return;
 	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-		DCout(SP_MESSAGE_FATAL, "Failed to aquire swapchain image!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to aquire swapchain image!");
 	}
 
 
@@ -120,6 +124,23 @@ void sp_Vulkan::drawFrame() {
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
+/*
+void sp_Vulkan::ImGuiStart(){
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	ImIO = ImGui::GetIO();
+	ImIO.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+	ImGui_ImplVulkan_InitInfo initInfo{};
+	initInfo.Instance = instance;
+	initInfo.PhysicalDevice = physicalDevice;
+	initInfo.Device = device;
+	initInfo.QueueFamily = findQueueFamilies(physicalDevice).presentFamily.value();
+
+
+}*/
+
 
 //Private Functions 
 
@@ -130,7 +151,7 @@ bool sp_Vulkan::checkValidationLayerSupport() {
 	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
 	
-	DCout(SP_MESSAGE_INFO, std::to_string(layerCount) + " Vulkan extensions supported");
+	SpConsole::consoleWrite(SP_MESSAGE_INFO, std::to_string(layerCount) + " Vulkan extensions supported");
 	std::vector<VkLayerProperties> availableLayers(layerCount);
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
@@ -153,7 +174,7 @@ bool sp_Vulkan::checkValidationLayerSupport() {
 void sp_Vulkan::createInstance() {
 	
 	if (enableValidationLayers && !checkValidationLayerSupport()) {
-		DCout(SP_MESSAGE_FATAL, "Validation layers requested but unavailable!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Validation layers requested but unavailable!");
 	}
 
 	// VK App info
@@ -209,12 +230,12 @@ vector<const char*> sp_Vulkan::getRequiredExtensions(bool debug) {
 	if (enableValidationLayers) extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
 	if (debug) {
-		DCout(SP_MESSAGE_INFO, "Required extension count: " + std::to_string(extensions.size()));
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Required extension count: " + std::to_string(extensions.size()));
 		string message = "";
 		for (uint32_t i = 0; i < extensions.size(); i++) {
 			message = message + "\n        " + extensions[i];
 		}
-		DCout(SP_MESSAGE_INFO, "Extensions: " + message + "\n -------------");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Extensions: " + message + "\n -------------");
 	}
 	
 
@@ -227,7 +248,7 @@ void sp_Vulkan::createSurface() {
 
 	int vulkanSupported = glfwVulkanSupported();
 	if (vulkanSupported == GLFW_TRUE) {
-		DCout(SP_MESSAGE_INFO, "Vulkan is available");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Vulkan is available");
 	}
 
 	VkResult result = glfwCreateWindowSurface(instance, glWindow, nullptr, &surface);
@@ -283,7 +304,7 @@ void sp_Vulkan::pickPhysicalDevice() {
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
-	if (deviceCount == 0) DCout(SP_MESSAGE_FATAL, "Failed to find GPU with Vulkan support!");
+	if (deviceCount == 0) SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to find GPU with Vulkan support!");
 	vector<VkPhysicalDevice> devices(deviceCount);
 
 	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
@@ -295,7 +316,7 @@ void sp_Vulkan::pickPhysicalDevice() {
 		}
 	}
 
-	if (mPhysicalDevice == VK_NULL_HANDLE) DCout(SP_MESSAGE_FATAL, "Failed to find suitable GPU!");
+	if (mPhysicalDevice == VK_NULL_HANDLE) SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to find suitable GPU!");
 	SpConsole::fatalExit(mPhysicalDevice == VK_NULL_HANDLE, "Failed to find suitable GPU!", 102);
 
 	physicalDevice = mPhysicalDevice;
@@ -318,7 +339,7 @@ bool sp_Vulkan::isSuitableDevice(VkPhysicalDevice device) {
 
 	QueueFamilyIndices indices = findQueueFamilies(device);
 
-	DCout(SP_MESSAGE_INFO, deviceProperties.deviceName);
+	SpConsole::consoleWrite(SP_MESSAGE_INFO, deviceProperties.deviceName);
 
 	#ifdef _DEBUG
 	string deviceName = string("Device: ") + deviceProperties.deviceName;
@@ -326,7 +347,7 @@ bool sp_Vulkan::isSuitableDevice(VkPhysicalDevice device) {
 	//string extSupported = "\nExtensions supported: " + to_string(extensionsSupported);
 	//string swChainGood = "\nSwap chain adequate: " + to_string(swapChainAdequate);
 	//string message = deviceName + indicesComplete + extSupported + swChainGood + "\n";
-	//DCout(SP_INFO, message);
+	//SpConsole::consoleWrite(SP_INFO, message);
 	#endif
 
 	return indices.isComplete() && extensionsSupported && swapChainAdequate;
@@ -339,11 +360,11 @@ bool sp_Vulkan::checkDeviceExtensionSupport(VkPhysicalDevice device) {
 	vector<VkExtensionProperties> availableExtensions(extensionCount);
 	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
-	set<string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+	set<string> requestedExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
-	for (const auto& extension : availableExtensions) requiredExtensions.erase(extension.extensionName);
+	for (const auto& extension : availableExtensions) requestedExtensions.erase(extension.extensionName);
 	
-	return requiredExtensions.empty();
+	return requestedExtensions.empty();
 }
 
 QueueFamilyIndices sp_Vulkan::findQueueFamilies(VkPhysicalDevice device){
@@ -417,9 +438,9 @@ void sp_Vulkan::createLogicalDevice() {
 	}
 
 	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
-		DCout(SP_MESSAGE_FATAL, "Failed to create logical device!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create logical device!");
 	} else {
-		DCout(SP_MESSAGE_INFO, "Created logical device!");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Created logical device!");
 	}
 
 	vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
@@ -475,10 +496,10 @@ void sp_Vulkan::createSwapchain() {
 	int result = vkCreateSwapchainKHR(device, &createInfo, nullptr, &Swapchain);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_MESSAGE_FATAL, "Failed to create swap chain!");
-		DCout(SP_MESSAGE_FATAL, "Error code: " + std::to_string(result));
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create swap chain!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Error code: " + std::to_string(result));
 	} else if (result == VK_SUCCESS) {
-		DCout(SP_MESSAGE_INFO, "Created swap chain!");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Created swap chain!");
 	}
 
 	vkGetSwapchainImagesKHR(device, Swapchain, &imageCount, nullptr);
@@ -504,8 +525,10 @@ void sp_Vulkan::recreateSwapchain() {
 
 	cleanupSwapchain();
 
+
 	createSwapchain();
 	createImageViews();
+	createDepthResources();
 	createFramebuffers();
 
 	cam->size = glm::ivec2(width, height);
@@ -548,7 +571,7 @@ VkSurfaceFormatKHR sp_Vulkan::chooseSwapSurfaceFormat(const vector<VkSurfaceForm
 		if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) return availableFormat;
 	}
 
-	DCout(SP_MESSAGE_WARNING, "Unable to find desired format, defaulting to first available format");
+	SpConsole::consoleWrite(SP_MESSAGE_WARNING, "Unable to find desired format, defaulting to first available format");
 	return availableFormats[0];
 }
 
@@ -605,12 +628,43 @@ void sp_Vulkan::createImageViews() {
 		bool result = vkCreateImageView(device, &createInfo, nullptr, &swapchainImageViews[i]);
 
 		if (result != VK_SUCCESS) {
-			DCout(SP_MESSAGE_FATAL, "Failed to create image view!");
-			DCout(SP_MESSAGE_FATAL, "Error Code: " + to_string(result));
+			SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create image view!");
+			SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Error Code: " + to_string(result));
 		} else {
-			DCout(SP_MESSAGE_INFO, string("Created Image View ") + to_string(i + 1));
+			SpConsole::consoleWrite(SP_MESSAGE_INFO, string("Created Image View ") + to_string(i + 1));
 		}
 	}
+}
+
+void sp_Vulkan::createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) {
+	VkImageCreateInfo imageInfo{};
+	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+	imageInfo.imageType = VK_IMAGE_TYPE_2D;
+	imageInfo.extent.width = width;
+	imageInfo.extent.height = height;
+	imageInfo.extent.depth = 1;
+	imageInfo.mipLevels = 1;
+	imageInfo.arrayLayers = 1;
+	imageInfo.format = format;
+	imageInfo.tiling = tiling;
+	imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	imageInfo.usage = usage;
+	imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+		
+	VkResult result = vkCreateImage(device, &imageInfo, nullptr, &image);
+	SpConsole::vkResultExitCheck(result, "Failed to create image!", Sp_Exit_FailedToCreateImage);
+	
+	VkMemoryRequirements memRequirements;
+	vkGetImageMemoryRequirements(device, image, &memRequirements);
+
+	VkMemoryAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocInfo.allocationSize = memRequirements.size;
+	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+
+	result = vkAllocateMemory(device, &allocInfo, nullptr, &imageMemory);
+	SpConsole::vkResultExitCheck(result, "Failed to allocate image memory!", Sp_Exit_FailedToAllocateImageMemory);
+	vkBindImageMemory(device, image, imageMemory, 0);
 }
 
 void sp_Vulkan::destroyImageViews() {
@@ -694,6 +748,14 @@ void sp_Vulkan::createGraphicsPipeline() {
 	multisampling.sampleShadingEnable = VK_FALSE;
 	multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
+	VkPipelineDepthStencilStateCreateInfo depthStencil{};
+	depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+	depthStencil.depthTestEnable = true;
+	depthStencil.depthWriteEnable = true;
+	depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+	depthStencil.depthBoundsTestEnable = VK_FALSE;
+	depthStencil.stencilTestEnable = VK_FALSE;
+
 	VkPipelineColorBlendAttachmentState colorBlendAttachment{};
 	colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 	colorBlendAttachment.blendEnable = VK_FALSE;
@@ -727,10 +789,10 @@ void sp_Vulkan::createGraphicsPipeline() {
 	int pipelineLayoutResult = vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout);
 
 	if(pipelineLayoutResult != VK_SUCCESS){
-		DCout(SP_MESSAGE_FATAL, "Failed to create pipeline layout!");
-		DCout(SP_MESSAGE_FATAL, to_string(pipelineLayoutResult));
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create pipeline layout!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, to_string(pipelineLayoutResult));
 	} else {
-		DCout(SP_MESSAGE_INFO, "Created pipeline layout");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Created pipeline layout");
 	}
 
 	VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -742,7 +804,7 @@ void sp_Vulkan::createGraphicsPipeline() {
 	pipelineInfo.pViewportState = &viewportState;
 	pipelineInfo.pRasterizationState = &rasterizer;
 	pipelineInfo.pMultisampleState = &multisampling;
-	//pipelineInfo.pDepthStencilState = nullptr;
+	pipelineInfo.pDepthStencilState = &depthStencil;
 	pipelineInfo.pColorBlendState = &colorBlending;
 	pipelineInfo.pDynamicState = &dynamicState;
 	pipelineInfo.layout = pipelineLayout;
@@ -760,10 +822,10 @@ void sp_Vulkan::createGraphicsPipeline() {
 
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_MESSAGE_FATAL, "Failed to create graphics pipeline");
-		DCout(SP_MESSAGE_FATAL, to_string(result));
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create graphics pipeline");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_MESSAGE_INFO, "Created graphics pipeline");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Created graphics pipeline");
 	}
 
 
@@ -781,10 +843,10 @@ VkShaderModule sp_Vulkan::createShaderModule(const vector<char>& code){
 	int result = vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_MESSAGE_FATAL, "Failed to create shader module!");
-		DCout(SP_MESSAGE_FATAL, to_string(result));
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create shader module!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_MESSAGE_INFO, "Created shader module!");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Created shader module!");
 	}
 
 	return shaderModule;
@@ -818,10 +880,10 @@ void sp_Vulkan::createRenderPass() {
 	VkSubpassDependency dependency{};
 	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
 	dependency.dstSubpass = 0;
-	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 	dependency.srcAccessMask = 0;
-	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
 	VkAttachmentDescription colorAttatchment{};
 	colorAttatchment.format = swapchainImageFormat;
@@ -837,27 +899,47 @@ void sp_Vulkan::createRenderPass() {
 	colorAttatchmentRef.attachment = 0;
 	colorAttatchmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
+	VkAttachmentDescription depthAttatchment{};
+	depthAttatchment.format = findDepthFormat();
+	depthAttatchment.samples = VK_SAMPLE_COUNT_1_BIT;
+	depthAttatchment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	depthAttatchment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthAttatchment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	depthAttatchment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthAttatchment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	depthAttatchment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+	VkAttachmentReference depthAttatchRef{};
+	depthAttatchRef.attachment = 1;
+	depthAttatchRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+
 	VkSubpassDescription subpass{};
 	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	subpass.colorAttachmentCount = 1;
 	subpass.pColorAttachments = &colorAttatchmentRef;
+	subpass.pDepthStencilAttachment = &depthAttatchRef;
+
+	std::array<VkAttachmentDescription, 2> attachments = { colorAttatchment, depthAttatchment };
 
 	VkRenderPassCreateInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	renderPassInfo.attachmentCount = 1;
-	renderPassInfo.pAttachments = &colorAttatchment;
+	renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+	renderPassInfo.pAttachments = attachments.data();
 	renderPassInfo.subpassCount = 1;
 	renderPassInfo.pSubpasses = &subpass;
 	renderPassInfo.dependencyCount = 1;
 	renderPassInfo.pDependencies = &dependency;
 
+	
+
 	int result = vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_MESSAGE_FATAL, "Failed to create render pass!");
-		DCout(SP_MESSAGE_FATAL, to_string(result));
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create render pass!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_MESSAGE_INFO, "Created render pass");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Created render pass");
 	}
 
 }
@@ -866,13 +948,14 @@ void sp_Vulkan::createFramebuffers(){
 	swapchainFramebuffers.resize(swapchainImageViews.size());
 
 	for (size_t i = 0; i < swapchainImageViews.size(); i++) {
-		VkImageView attatchments[1] = { swapchainImageViews[i] };
+		std::array<VkImageView, 2> attachments = { swapchainImageViews[i], depthImageView };
+
 
 		VkFramebufferCreateInfo framebufferInfo{};
 		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		framebufferInfo.renderPass = renderPass;
-		framebufferInfo.attachmentCount = 1;
-		framebufferInfo.pAttachments = attatchments;
+		framebufferInfo.attachmentCount = attachments.size();
+		framebufferInfo.pAttachments = attachments.data();
 		framebufferInfo.width = swapchainExtent.width;
 		framebufferInfo.height = swapchainExtent.height;
 		framebufferInfo.layers = 1;
@@ -880,10 +963,10 @@ void sp_Vulkan::createFramebuffers(){
 		bool result = vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapchainFramebuffers[i]);
 
 		if (result != VK_SUCCESS) {
-			DCout(SP_MESSAGE_FATAL, "Framebuffer not created!");
-			DCout(SP_MESSAGE_FATAL, to_string(result));
+			SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Framebuffer not created!");
+			SpConsole::consoleWrite(SP_MESSAGE_FATAL, to_string(result));
 		} else {
-			DCout(SP_MESSAGE_INFO, "Framebuffer created");
+			SpConsole::consoleWrite(SP_MESSAGE_INFO, "Framebuffer created");
 		}
 
 	}
@@ -906,10 +989,10 @@ void sp_Vulkan::createCommandPool() {
 	bool result = vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_MESSAGE_FATAL, "Failed to create command pool!");
-		DCout(SP_MESSAGE_FATAL, to_string(result));
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create command pool!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_MESSAGE_INFO, "Created command pool");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Created command pool");
 	}
 }
 
@@ -924,10 +1007,10 @@ void sp_Vulkan::createCommandBuffer() {
 	bool result = vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data());
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_MESSAGE_FATAL, "Failed to create command buffers!");
-		DCout(SP_MESSAGE_FATAL, to_string(result));
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create command buffers!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, to_string(result));
 	} else {
-		DCout(SP_MESSAGE_INFO, "Created command buffers");
+		SpConsole::consoleWrite(SP_MESSAGE_INFO, "Created command buffers");
 	}
 }
 
@@ -940,8 +1023,8 @@ void sp_Vulkan::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imag
 	bool result = vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
 	if (result != VK_SUCCESS) {
-		DCout(SP_MESSAGE_FATAL, "Failed to begin recording command buffer!");
-		DCout(SP_MESSAGE_FATAL, to_string(result));
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to begin recording command buffer!");
+		SpConsole::consoleWrite(SP_MESSAGE_FATAL, to_string(result));
 	}
 
 	VkRenderPassBeginInfo renderPassInfo{};
@@ -951,9 +1034,11 @@ void sp_Vulkan::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imag
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = swapchainExtent;
 	
-	VkClearValue clearColor = { {{0.1f, 0.1f, 0.1f, 1.0f}} };
-	renderPassInfo.clearValueCount = 1;
-	renderPassInfo.pClearValues = &clearColor;
+	std::array<VkClearValue, 2> clearValues{};
+	clearValues[0] = {{{0.1f, 0.1f, 0.1f, 1.0f}}};
+	clearValues[1].depthStencil = { 1.0f, 0 };
+	renderPassInfo.clearValueCount = clearValues.size();
+	renderPassInfo.pClearValues = clearValues.data();
 
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
@@ -1008,7 +1093,7 @@ void sp_Vulkan::createSyncObjects() {
 		if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
 			vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
 			vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
-			DCout(SP_MESSAGE_FATAL, "Failed to create semaphores!");
+			SpConsole::consoleWrite(SP_MESSAGE_FATAL, "Failed to create semaphores!");
 		}
 	}
 }
@@ -1230,6 +1315,56 @@ void sp_Vulkan::createTextureImage(){
 
 }
 
+void sp_Vulkan::createDepthResources(){
+	VkFormat depthFormat = findDepthFormat();
+
+	createImage(swapchainExtent.width, swapchainExtent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
+	depthImageView = createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+
+	
+}
+
+VkFormat sp_Vulkan::findDepthFormat(){
+	return findSupportedFormat( { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
+		VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+}
+
+VkFormat sp_Vulkan::findSupportedFormat(const std::vector<VkFormat>& canidates, VkImageTiling tiling, VkFormatFeatureFlags features){
+	for (VkFormat format : canidates) {
+		VkFormatProperties props;
+		vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &props);
+
+		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) { 
+			return format; 
+		} else if(tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features) {
+			return format;
+		}
+
+	}
+
+	SpConsole::fatalExit("Failed to find supported format!", 69);
+}
+
+VkImageView sp_Vulkan::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags){
+	VkImageViewCreateInfo viewInfo{};
+	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	viewInfo.image = image;
+	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	viewInfo.format = format;
+	viewInfo.subresourceRange.aspectMask = aspectFlags;
+	viewInfo.subresourceRange.baseMipLevel = 0;
+	viewInfo.subresourceRange.levelCount = 1;
+	viewInfo.subresourceRange.baseArrayLayer = 0;
+	viewInfo.subresourceRange.layerCount = 1;
+
+	VkImageView imageView;
+	VkResult result = vkCreateImageView(device, &viewInfo, nullptr, &imageView);
+
+	SpConsole::vkResultExitCheck(result, "Failed to create image view!", Sp_Exit_FailedToCreateImageView);
+
+	return imageView;
+}
+
 #pragma endregion
 
 #pragma region _sp_Vulkan::Swapchain
@@ -1330,7 +1465,7 @@ VkSurfaceFormatKHR _sp_Vulkan::Swapchain::chooseSwapSurfaceFormat(const vector<V
 
 	}
 
-	DCout(SP_MESSAGE_WARNING, "Unable to find desired format, defaulting to first available format!");
+	SpConsole::consoleWrite(SP_MESSAGE_WARNING, "Unable to find desired format, defaulting to first available format!");
 	return availableFormats[0];
 }
 
