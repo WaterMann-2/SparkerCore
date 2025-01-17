@@ -24,7 +24,6 @@
 #include <vulkan/vulkan.h>
 
 #include "sp_Debug.h"
-#include "sp_VkStructs.h"
 #include "sp_Window.h"
 #include "sp_Utility.h"
 #include "sp_Primitive.h"

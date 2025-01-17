@@ -2,7 +2,7 @@
 /*
 void _sp_Vulkan::startup::createInstance(VkInstance& instance) {
 	if (EnableValidationLayers && !checkValidationLayerSupport()) {
-		DCout(SP_ERROR, "Validation layers requested but not available!");
+		SpConsole::consoleWrite(SP_ERROR, "Validation layers requested but not available!");
 	}
 
 	// TODO Read app info from file
@@ -43,7 +43,7 @@ bool _sp_Vulkan::startup::checkValidationLayerSupport() {
 	//Need to run this command to get the layer count before making "availableLayers" init size
 	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
-	DCout(SP_INFO, std::to_string(layerCount) + " Vulkan layers supported");
+	SpConsole::consoleWrite(SP_INFO, std::to_string(layerCount) + " Vulkan layers supported");
 	std::vector<VkLayerProperties> availableLayers(layerCount);
 
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
@@ -61,7 +61,7 @@ bool _sp_Vulkan::startup::checkValidationLayerSupport() {
 		}
 
 		if (!layerFound) {
-			DCout(SP_ERROR, layerRequested + " requested but not found!");
+			SpConsole::consoleWrite(SP_ERROR, layerRequested + " requested but not found!");
 			return false;
 		}
 	}
@@ -80,7 +80,7 @@ vector<const char*> _sp_Vulkan::startup::getExtensions(){
 
 	if (EnableValidationLayers) extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
-	DCout(SP_INFO, "Required extension count: " + std::to_string(extensions.size()));
+	SpConsole::consoleWrite(SP_INFO, "Required extension count: " + std::to_string(extensions.size()));
 	
 
 	return extensions;
@@ -123,7 +123,7 @@ VkResult _sp_Vulkan::startup::createDebugUtilsMessenger(VkInstance instance,
 void _sp_Vulkan::startup::createSurface(VkInstance& instance, GLFWwindow*& window, VkSurfaceKHR& surface){
 	int vulkanSupported = glfwVulkanSupported();
 	if (vulkanSupported == GLFW_FALSE) {
-		DCout(SP_FATAL, "Vulkan not supported!");
+		SpConsole::consoleWrite(SP_FATAL, "Vulkan not supported!");
 		std::exit(100);
 	}
 

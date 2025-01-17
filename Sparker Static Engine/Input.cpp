@@ -133,7 +133,7 @@ KeyListener* SpInput::addKey(int key){
 
 #ifdef INPUT_DEBUG
 	string message = "Created Binding with glKey " +  std::to_string(key);
-	DCout(SP_MESSAGE_INFO, message);
+	SpConsole::consoleWrite(SP_MESSAGE_INFO, message);
 #endif
 
 	currentCount++;
@@ -162,7 +162,7 @@ Binding4* SpInput::addBinding4(const char* name, int inNorth, int inSouth, int i
 
 #ifdef INPUT_DEBUG
 	string message = "Created Binding4 " + string(name) + " with bindings N: " + std::to_string(inNorth) + ", S: " + std::to_string(inSouth) + ", E: " + std::to_string(inWest);
-	DCout(SP_MESSAGE_INFO, message);
+	SpConsole::consoleWrite(SP_MESSAGE_INFO, message);
 #endif
 
 	currentCountB4++;
@@ -185,7 +185,7 @@ Binding2* SpInput::addBinding2(const char* name, int inHiVal, int inLoVal){
 
 #ifdef INPUT_DEBUG
 	string message = "Created Binding4 " + string(name) + " with bindings N: " + std::to_string(inHiVal) + ", S: " + std::to_string(inLoVal);
-	DCout(SP_MESSAGE_INFO, message);
+	SpConsole::consoleWrite(SP_MESSAGE_INFO, message);
 #endif
 
 	currentCountB2++;

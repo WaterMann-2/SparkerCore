@@ -21,7 +21,7 @@ struct QueueFamilyIndices {
 	}
 };
 
-struct SwapChainSupportDetails {
+struct SwapchainSupportDetails {
 	VkSurfaceCapabilitiesKHR capabilities;
 	vector<VkSurfaceFormatKHR> formats;
 	vector <VkPresentModeKHR> presentModes;
@@ -38,10 +38,4 @@ enum counting {
 	one, 
 	two, 
 	three
-};
-
-struct UniformBufferObject {
-	alignas(16) glm::mat4 model;
-	alignas(16) glm::mat4 view;
-	alignas(16) glm::mat4 proj;
 };

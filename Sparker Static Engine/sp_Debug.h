@@ -1,17 +1,6 @@
 #ifndef SP_DEBUG_H
 #define SP_DEBUG_H
 
-#ifdef _DEBUG
-	#define DCout(severity, message)  sp_Console::consoleWrite(severity, message)
-#else
-	#define DCout(severity, message) do {} while(false)
-	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram, exitCode)
-	#define VkResultCheck(failSeverity, result, SuccessMessage, FailMessage, ExitProgram)
-	#define FatalExit(condition, failMessage, failCode)
-#endif
-
-
-
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -40,6 +29,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "sp_VkStructs.h"
+
 using std::string;
 using std::vector;
 using std::optional;
@@ -52,7 +43,7 @@ enum ErrorCode {
 	SP_ASSIMP_FLAGS_INCOMPLETE = 510
 };
 
-class SpDebug{
+class SpDebug {
 
 public:
 
