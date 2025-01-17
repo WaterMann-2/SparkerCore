@@ -535,6 +535,9 @@ void sp_Vulkan::recreateSwapchain() {
 }
 
 void sp_Vulkan::cleanupSwapchain() {
+	vkDestroyImageView(device, depthImageView, nullptr);
+	vkDestroyImage(device, depthImage, nullptr);
+	vkFreeMemory(device, depthImageMemory, nullptr);
 	destroyFramebuffers();
 	destroyImageViews();
 
