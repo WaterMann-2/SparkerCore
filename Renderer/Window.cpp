@@ -41,5 +41,5 @@ VkSurfaceKHR* Window::windowSurface(){
 void Window::createSurface() {
 	VkResult surfaceCreateResult = glfwCreateWindowSurface(instance, window, nullptr, &surface);
 
-	Debug::SpConsole::vkResultExitCheck(surfaceCreateResult, "Failed to create window surface!", "Created window surface", Debug::SP_EXIT_FAILED_TO_CREATE_WINDOW_SURFACE);
+	SpDebug::SpConsole::vkResultExitCheck(surfaceCreateResult, "Failed to create window surface!", "Created window surface", SpDebug::SP_EXIT_FAILED_TO_CREATE_WINDOW_SURFACE);
 }

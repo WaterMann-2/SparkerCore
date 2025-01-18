@@ -21,7 +21,7 @@ void Renderer::CreateInstance(SpRendererInstanceCreateInfo SpCreateInfo) {
 		createInfo.enabledLayerCount = static_cast<uint32_t>(SpCreateInfo.requestedLayers.size());
 		createInfo.ppEnabledLayerNames = SpCreateInfo.requestedLayers.data();
 
-		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = Debug::SpConsole::PopulateDebugMessenger();
+		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = SpDebug::SpConsole::PopulateDebugMessenger();
 
 		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
 	} else {
@@ -30,7 +30,7 @@ void Renderer::CreateInstance(SpRendererInstanceCreateInfo SpCreateInfo) {
 
 	VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
 
-	Debug::SpConsole::vkResultExitCheck(result, "Failed to create Vulkan instance!", "Created Vulkan Instance", Debug::SP_EXIT_FAILED_TO_CREATE_INSTANCE);
+	SpDebug::SpConsole::vkResultExitCheck(result, "Failed to create Vulkan instance!", "Created Vulkan Instance", SpDebug::SP_EXIT_FAILED_TO_CREATE_INSTANCE);
 
 	if (SpCreateInfo.debugEnabled) {
 		createDebugMessenger();
@@ -38,7 +38,7 @@ void Renderer::CreateInstance(SpRendererInstanceCreateInfo SpCreateInfo) {
 }
 
 void Renderer::createDebugMessenger(){
-	VkDebugUtilsMessengerCreateInfoEXT createInfo = Debug::SpConsole::PopulateDebugMessenger();
+	VkDebugUtilsMessengerCreateInfoEXT createInfo = SpDebug::SpConsole::PopulateDebugMessenger();
 
 	PFN_vkCreateDebugUtilsMessengerEXT func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 
@@ -47,7 +47,7 @@ void Renderer::createDebugMessenger(){
 		debugCreateResult = func(instance, &createInfo, nullptr, &debugMessenger);
 	}
 
-	Debug::SpConsole::vkResultCheck(Debug::SP_MESSAGE_FATAL, debugCreateResult, "Created Debug Messenger.", "Failed to create Debug Messenger!", Debug::SP_EXIT_FAILED_TO_CREATE_DEBUG_MESSENGER);
+	SpDebug::SpConsole::vkResultCheck(SpDebug::SP_MESSAGE_FATAL, debugCreateResult, "Created Debug Messenger.", "Failed to create Debug Messenger!", SpDebug::SP_EXIT_FAILED_TO_CREATE_DEBUG_MESSENGER);
 }
 
 void Renderer::getRequiredExtensions(vector<const char*> RequestedExtensions, bool DebugModeOn){

@@ -417,15 +417,11 @@ void sp_Vulkan::createLogicalDevice() {
 	}
 
 
-	//TODO tutorial
-	VkPhysicalDeviceFeatures deviceFeatures{};
-
-
 	VkDeviceCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
 	createInfo.pQueueCreateInfos = queueCreateInfos.data();
-	createInfo.pEnabledFeatures = &deviceFeatures;
+	createInfo.pEnabledFeatures = nullptr;
 
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
@@ -1433,6 +1429,7 @@ VkSwapchainKHR* _sp_Vulkan::Swapchain::createSwapchain(VkDevice& srcDevice, VkPh
 
 	return &swapchain;
 }
+
 
 SwapchainSupportDetails _sp_Vulkan::Swapchain::querySwapchainSupport(VkPhysicalDevice& physicalDevice){
 	SwapchainSupportDetails details;

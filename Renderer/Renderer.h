@@ -1,7 +1,7 @@
 #pragma once
 
 #define SPARKER_VULKAN_API
-#include <Debug.h>
+#include <SpDebug.h>
 
 #include "Window.h"
 
@@ -26,6 +26,9 @@ private:
 	VkDebugUtilsMessengerEXT debugMessenger;
 
 	VkInstance instance;
+
+	VkPhysicalDevice physicalDevice;
+	VkDevice deivce;
 
 	vector<const char*> requiredExtensions;
 

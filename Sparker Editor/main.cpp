@@ -35,7 +35,7 @@ int main() {
 	
 	vulkan.cam = &cam;
 
-	float baseMSens = 5.0f;
+	float baseMSens = 2.0f;
 	float movementSensitivity = 5.0f;
 
 	float sensitivity = 0.01f;

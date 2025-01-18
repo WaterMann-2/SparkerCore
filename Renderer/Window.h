@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Debug.h>
+#include <SpDebug.h>
 
 struct WindowCreateInfo {
 	string name;

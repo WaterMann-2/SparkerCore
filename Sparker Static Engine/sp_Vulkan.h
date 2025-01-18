@@ -21,8 +21,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <vulkan/vulkan.h>
-
 #include "sp_Debug.h"
 #include "sp_Window.h"
 #include "sp_Utility.h"
@@ -85,8 +83,6 @@ const std::vector<uint32_t> indices = {
 	13, 12, 14, 12, 15, 14, 
 	9, 13, 10, 10, 13, 14,
 	8, 12, 13, 13, 9, 8
-
-	
 };
 
 const int MAX_FRAMES_IN_FLIGHT = 3;

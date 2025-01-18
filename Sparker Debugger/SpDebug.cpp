@@ -1,6 +1,6 @@
-#include "Debug.h"
+#include "SpDebug.h"
 
-namespace Debug {
+namespace SpDebug {
 
 	void SpConsole::consoleWrite(SpMessage severity, string message) {
 		switch (severity) {
