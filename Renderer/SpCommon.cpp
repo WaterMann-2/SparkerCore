@@ -32,5 +32,5 @@ QueueFamilyIndices SpCommon::Memory::findQueueFamilies(VkPhysicalDevice physical
 
         if (presentSupport) indices.presentFamily = i;
     }
-    return QueueFamilyIndices();
+    return indices;
 }

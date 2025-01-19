@@ -4,6 +4,8 @@
 #include <SpDebug.h>
 
 #include "Window.h"
+#include "SpBuffer.h"
+#include "SpDevice.h"
 
 struct SpRendererInstanceCreateInfo {
 	string applicationName;
@@ -27,8 +29,8 @@ private:
 
 	VkInstance instance;
 
-	VkPhysicalDevice physicalDevice;
-	VkDevice deivce;
+	SpDevice::SpPhysicalDevice physicalDevice;
+	SpDevice::SpLogicalDevice device;
 
 	vector<const char*> requiredExtensions;
 

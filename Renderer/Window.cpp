@@ -31,7 +31,7 @@ Window::Window(WindowCreateInfo WindowCreateInfo) {
 
 	glfwMakeContextCurrent(window);
 
-
+	createSurface();
 }
 
 VkSurfaceKHR* Window::windowSurface(){
