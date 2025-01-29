@@ -13,12 +13,13 @@ struct WindowCreateInfo {
 	int* height;
 };
 
-class Window {
+class SpWindow {
 public:
+	GLFWwindow* glWindow();
+	VkSurfaceKHR windowSurface();
 
-	Window(WindowCreateInfo WindowCreateInfo);
+	SpWindow(WindowCreateInfo WindowCreateInfo);
 
-	VkSurfaceKHR* windowSurface();
 
 private:
 	GLFWwindow* window;

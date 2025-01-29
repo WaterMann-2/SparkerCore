@@ -14,6 +14,14 @@ struct QueueFamilyIndices {
 
 };
 
+struct SwapchainSupportDetails {
+	VkSurfaceCapabilitiesKHR capabilities;
+	vector<VkSurfaceFormatKHR> formats;
+	vector<VkPresentModeKHR> presentModes;
+
+	bool compatiable() { return !formats.empty() && !presentModes.empty(); }
+};
+
 namespace SpCommon {
 	namespace Memory {
 
@@ -21,4 +29,7 @@ namespace SpCommon {
 
 		static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 	}
+
+	
+
 }

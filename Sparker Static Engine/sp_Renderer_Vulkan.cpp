@@ -120,7 +120,8 @@ inline vector<const char*> Sparker_Engine::Renderer::sp_Vulkan2::getRequiredexte
 	return extensions;
 }
 
-inline VkDebugUtilsMessengerCreateInfoEXT Sparker_Engine::Renderer::sp_Vulkan2::populateDebugMessenger() {
+VkDebugUtilsMessengerCreateInfoEXT Sparker_Engine::Renderer::sp_Vulkan2::populateDebugMessenger() {
+	SpConsole::consoleWrite(SP_MESSAGE_INFO, "Creating debug messenger!");
 	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 	debugCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	debugCreateInfo.messageSeverity = SP_VK_VERBOSE | SP_VK_WARNING | SP_VK_ERROR;

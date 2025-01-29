@@ -20,7 +20,6 @@ void SpDevice::SpPhysicalDevice::CreatePhysicalDevice(VkInstance Instance, vecto
 
 
 void SpDevice::SpPhysicalDevice::pickDevice(){
-	VkPhysicalDevice mPhysicalDevice = NULL;
 	uint32_t deviceCount = 0;
 
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
@@ -106,6 +105,11 @@ void SpDevice::SpPhysicalDevice::querySwapchainSupport(SpPhysicalDeviceInfo& inf
 		info.swapchainSupportDetails.formats.resize(presentModeCount);
 		vkGetPhysicalDeviceSurfaceFormatsKHR(info.device, surface, &presentModeCount, info.swapchainSupportDetails.formats.data());
 	}
+}
+
+
+SpDevice::SpLogicalDeviceInfo* SpDevice::SpLogicalDevice::getDeviceInfo(){
+	return &deviceInfo;
 }
 
 void SpDevice::SpLogicalDevice::CreateLogicalDevice(VkInstance Instance, SpPhysicalDeviceInfo& PhysicalDevice, vector<const char*> enabledValidationLayerNames) {

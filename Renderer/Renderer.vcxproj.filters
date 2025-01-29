@@ -36,6 +36,9 @@
     <ClInclude Include="SpDevice.h">
       <Filter>Header Files\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="SpSwapchain.h">
+      <Filter>Header Files\Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -51,6 +54,9 @@
       <Filter>Source Files\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="SpDevice.cpp">
+      <Filter>Source Files\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="SpSwapchain.cpp">
       <Filter>Source Files\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>

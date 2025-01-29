@@ -66,7 +66,7 @@ namespace SpDebug {
 		std::exit(exitCode);
 	}
 
-	void SpConsole::fatalExit(bool condition, string exitMessage, int exitCode) {
+	void SpConsole::fatalExit(bool condition, string exitMessage, SpExitCode exitCode) {
 		if (!condition) {
 			return;
 		}
@@ -75,7 +75,7 @@ namespace SpDebug {
 		std::exit(exitCode);
 	}
 
-	void SpConsole::fatalExit(string exitMessage, int exitCode) {
+	void SpConsole::fatalExit(string exitMessage, SpExitCode exitCode) {
 		consoleWrite(SP_MESSAGE_FATAL, exitMessage);
 		std::exit(exitCode);
 	}

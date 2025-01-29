@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Debug.h">
+    <ClInclude Include="SpDebug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Debug.cpp">
+    <ClCompile Include="SpDebug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

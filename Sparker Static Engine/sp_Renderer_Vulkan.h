@@ -33,7 +33,7 @@ namespace Sparker_Engine {
 		private: // Static utility functions
 			inline static bool checkValidationLayerSupport(vector<const char*> requestedLayers);
 			inline static vector<const char*> getRequiredextensions();
-			inline static VkDebugUtilsMessengerCreateInfoEXT populateDebugMessenger();
+			static VkDebugUtilsMessengerCreateInfoEXT populateDebugMessenger();
 		};
 
 	}

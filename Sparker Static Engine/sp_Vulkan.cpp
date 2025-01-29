@@ -52,7 +52,7 @@ void sp_Vulkan::vulkanCleanup(){
 	destroySyncObjects();
 	vkDestroyCommandPool(device, commandPool, nullptr);
 	vkDestroyDevice(device, nullptr);
-	if (enableValidationLayers) {
+	if (true) {
 		DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
 	}
 	vkDestroySurfaceKHR(instance, surface, nullptr);

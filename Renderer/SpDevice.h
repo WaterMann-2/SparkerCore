@@ -5,14 +5,6 @@
 
 namespace SpDevice {
 
-	struct SwapchainSupportDetails {
-		VkSurfaceCapabilitiesKHR capabilities;
-		vector<VkSurfaceFormatKHR> formats;
-		vector<VkPresentModeKHR> presentModes;
-
-		bool compatiable() { return !formats.empty() && !presentModes.empty(); }
-	};
-
 	struct SpPhysicalDeviceInfo {
 		VkPhysicalDevice device;
 		VkPhysicalDeviceProperties properties;
@@ -70,8 +62,10 @@ namespace SpDevice {
 
 	class SpLogicalDevice {
 	public:
+		SpLogicalDeviceInfo* getDeviceInfo();
 
 		void CreateLogicalDevice(VkInstance Instance, SpPhysicalDeviceInfo& PhysicalDeviceInfo, vector<const char*> enabledValidationLayerNames);
+
 
 	private:
 		VkInstance instance;

@@ -23,6 +23,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SpBuffer.h" />
     <ClInclude Include="SpDevice.h" />
+    <ClInclude Include="SpSwapchain.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +31,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SpBuffer.cpp" />
     <ClCompile Include="SpDevice.cpp" />
+    <ClCompile Include="SpSwapchain.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

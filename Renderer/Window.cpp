@@ -1,6 +1,10 @@
 #include "Window.h"
 
-Window::Window(WindowCreateInfo WindowCreateInfo) {
+GLFWwindow* SpWindow::glWindow(){
+	return window;
+}
+
+SpWindow::SpWindow(WindowCreateInfo WindowCreateInfo) {
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -34,11 +38,11 @@ Window::Window(WindowCreateInfo WindowCreateInfo) {
 	createSurface();
 }
 
-VkSurfaceKHR* Window::windowSurface(){
+VkSurfaceKHR SpWindow::windowSurface(){
 	return &surface;
 }
 
-void Window::createSurface() {
+void SpWindow::createSurface() {
 	VkResult surfaceCreateResult = glfwCreateWindowSurface(instance, window, nullptr, &surface);
 
 	SpDebug::SpConsole::vkResultExitCheck(surfaceCreateResult, "Failed to create window surface!", "Created window surface", SpDebug::SP_EXIT_FAILED_TO_CREATE_WINDOW_SURFACE);
